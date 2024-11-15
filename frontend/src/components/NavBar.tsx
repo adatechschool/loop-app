@@ -24,7 +24,7 @@ const Navbar: React.FC = () => {
     <Box
     as="nav"
     width="100%"
-    p="20px 0" // 10px on top and bottom, 0px on the sides
+    p="22px 0" // 10px on top and bottom, 0px on the sides
     bg={theme.colors.primary} // Use the primary color from the theme
     color="white"
     position={position}
