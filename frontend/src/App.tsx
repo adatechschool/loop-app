@@ -1,12 +1,12 @@
 
 import React from 'react';
 import { Routes, Route } from 'react-router-dom'; 
-import { HomePage } from './pages/Homepage/HomePage'; 
+import HomePage from './pages/HomePage'; 
 import ListPage from './pages/ListPage';
 import AddPage from './pages/AddPage';
 import SearchPage from './pages/SearchPage';
 import ProfilePage from './pages/ProfilePage';
-import Navbar from './components/NavBar/NavBar';
+import Navbar from './components/NavBar';
 const App: React.FC = () => {
   return (
     <div>
