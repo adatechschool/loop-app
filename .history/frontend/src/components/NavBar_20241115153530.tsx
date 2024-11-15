@@ -22,22 +22,22 @@ const Navbar: React.FC = () => {
 
   return (
     <Box
-    as="nav"
-    width="100%"
-    p="20px 0" // 10px on top and bottom, 0px on the sides
-    bg={theme.colors.primary} // Use the primary color from the theme
-    color="white"
-    position={position}
-    {...{ [bottomOrTop!]: 0 }}
-    zIndex="1000"
-  >
+      as="nav"
+      width="100%"
+      p={4}
+      bg={theme.colors.primary} // Use the primary color from the theme
+      color="white"
+      position={position}
+      {...{ [bottomOrTop!]: 0 }}
+      zIndex="1000"
+    >
       <Flex align="center" justify="space-around">
         <Link to="/home"> {/* Home route */}
           <IconButton
             icon={<FiHome />}
             aria-label="Home"
             variant="ghost"
-            fontSize="35px" 
+            fontSize="40px" 
             color={selectedIcon === 'home' ? theme.colors.selected : theme.colors.icon}
             _hover={{ bg: theme.colors.hover }}
             onClick={() => handleIconClick('home')}
@@ -48,7 +48,7 @@ const Navbar: React.FC = () => {
             icon={<GoLocation />}
             aria-label="Location"
             variant="ghost"
-            fontSize="35px" 
+            fontSize="40px" 
             color={selectedIcon === 'location' ? theme.colors.selected : theme.colors.icon}
             _hover={{ bg: theme.colors.hover }}
             onClick={() => handleIconClick('location')}
@@ -59,7 +59,7 @@ const Navbar: React.FC = () => {
             icon={<MdAddBox />}
             aria-label="Add"
             variant="ghost"
-            fontSize="35px" 
+            fontSize="40px" 
             color={selectedIcon === 'add' ? theme.colors.selected : theme.colors.icon}
             _hover={{ bg: theme.colors.hover }}
             onClick={() => handleIconClick('add')}
@@ -70,7 +70,7 @@ const Navbar: React.FC = () => {
             icon={<IoSearch />}
             aria-label="Search"
             variant="ghost"
-            fontSize="35px" 
+            fontSize="40px" 
             color={selectedIcon === 'search' ? theme.colors.selected : theme.colors.icon}
             _hover={{ bg: theme.colors.hover }}
             onClick={() => handleIconClick('search')}
@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
             icon={<BsPerson />}
             aria-label="Profile"
             variant="ghost"
-            fontSize="35px" 
+            fontSize="24px" 
             color={selectedIcon === 'profile' ? theme.colors.selected : theme.colors.icon}
             _hover={{ bg: theme.colors.hover }}
             onClick={() => handleIconClick('profile')}
