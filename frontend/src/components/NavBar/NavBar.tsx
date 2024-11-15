@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Flex, IconButton, useBreakpointValue, useTheme } from '@chakra-ui/react';
-import { FiHome } from 'react-icons/fi';
+import { FiHome } from 'react-icons/fi'
 import { GoLocation } from 'react-icons/go';
 import { MdAddBox } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
