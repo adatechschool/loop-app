@@ -5,7 +5,7 @@ const ListPage: React.FC = () => {
   return (
     <div>
       <h1>Map Page</h1>
-      <p>Here you can view the map.</p>
+      <p>Here you can view the list</p>
     </div>
   );
 };

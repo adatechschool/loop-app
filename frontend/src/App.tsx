@@ -8,9 +8,8 @@ const App: React.FC = () => {
     <div>
       <Navbar /> {/* Your navigation bar */}
       <Routes>
-        <Route path="/home" element={<HomePage />} />{" "}
-        {/* Route for Home Page */}
-        <Route path="/map" element={<ListPage />} /> {/* Route for Map Page */}
+        <Route path="/home" element={<HomePage />} /> {/* Route for Home Page */}
+        <Route path="/list" element={<ListPage />} /> {/* Route for Map Page */}
         <Route path="/add" element={<AddPage />} /> {/* Route for Add Page */}
         <Route path="/search" element={<SearchPage />} />{" "}
         {/* Route for Search Page */}
