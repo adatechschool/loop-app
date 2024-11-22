@@ -1,7 +1,7 @@
 import React from "react"
-import { Map }  from "../../components/Map/Map"
+import { Map } from 'src/components'
 
-export const HomePage = () => {
+const HomePage = () => {
     return (
         <div>
             <Map />
@@ -9,3 +9,5 @@ export const HomePage = () => {
     )
 
 }
+
+export default HomePage

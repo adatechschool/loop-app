@@ -19,14 +19,14 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "./", // Sets the base path to the root directory
+    "baseUrl": "./",
     "paths": {
-      "@components/*": ["src/components/*"],
+      "components/*": ["components/*"],
       "@utils/*": ["src/utils/*"],
-      "@pages/*": ["src/pages/*"]
+      "pages/*": ["pages/*"]
     }
   },
   "include": [
-    "src"
+    "src/"
   ]
 }
