@@ -2,7 +2,7 @@ import HomePage from "./Homepage/HomePage";
 import AddPage from "./AddPage/AddPage";
 import ListPage from "./ListPage";
 import ProfilePage from "./ProfilePage";
-import SearchPage from "./SearchPage";
+import SearchPage from "./SearchPage/SearchPage";
 
 
 export {
