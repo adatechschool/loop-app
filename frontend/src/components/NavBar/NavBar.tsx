@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Flex, IconButton, useBreakpointValue, useTheme } from '@chakra-ui/react';
 import { FiHome } from 'react-icons/fi';
-import { GoLocation } from 'react-icons/go';
+import { BiDirections } from 'react-icons/bi'; // Importing BiDirections
 import { MdAddBox } from 'react-icons/md';
 import { IoSearch } from 'react-icons/io5';
 import { BsPerson } from 'react-icons/bs';
@@ -24,9 +24,9 @@ const Navbar: React.FC = () => {
     <Box
       as="nav"
       width="100%"
-      p={4}
-      bg="white" // Set background color to white
-      color="black" // Update text/icon color for contrast
+      p="22px 0" // 22px padding on top and bottom, 0px on the sides
+      bg={{ base: 'white', md: theme.colors.primary }} // Use the primary color from the theme
+      color="white"
       position={position}
       {...{ [bottomOrTop!]: 0 }}
       zIndex="1000"
@@ -44,15 +44,15 @@ const Navbar: React.FC = () => {
             onClick={() => handleIconClick('home')}
           />
         </Link>
-        <Link to="/location"> {/* Location route */}
+        <Link to="/list"> {/* Map route */}
           <IconButton
-            icon={<GoLocation />}
-            aria-label="Location"
+            icon={<BiDirections />} // Updated to use BiDirections
+            aria-label="List"
             variant="ghost"
             fontSize="25px"
             color={selectedIcon === 'location' ? theme.colors.selected : theme.colors.icon}
             _hover={{ bg: theme.colors.hover }}
-            onClick={() => handleIconClick('location')}
+            onClick={() => handleIconClick('map')}
           />
         </Link>
         <Link to="/add"> {/* Add route */}
