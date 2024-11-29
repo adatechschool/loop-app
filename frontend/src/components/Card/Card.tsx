@@ -7,11 +7,11 @@ interface CardProps {
   images: string[]; // Array of image URLs
   title: string; // Title of the card
   description: string; // Description of the card
-  seeMoreClick: () => void; // Function that runs when the 'See More' button is clicked
-  addToFavorites: () => void; // Function that runs when the 'Add to Favorites' button is clicked
+  // seeMoreClick: () => void; // Function that runs when the 'See More' button is clicked
+  // addToFavorites: () => void; // Function that runs when the 'Add to Favorites' button is clicked
 }
 
-const Card: React.FC<CardProps> = ({ images, title, description, seeMoreClick, addToFavorites }) => {
+const Card: React.FC<CardProps> = ({ images, title, description}) => {
   return (
     <Box maxW="sm" overflow="hidden" border="1px solid #ddd" borderRadius="md" p="4">
       <Carousel>
@@ -28,10 +28,10 @@ const Card: React.FC<CardProps> = ({ images, title, description, seeMoreClick, a
         <Text mb="2">{description}</Text>
       </VStack>
       <Flex justifyContent="space-between" p="4">
-        <Button variant="solid" colorScheme="teal" onClick={seeMoreClick}>
+        <Button variant="solid" colorScheme="teal">
           See More
         </Button>
-        <Button variant="ghost" onClick={addToFavorites}>
+        <Button variant="ghost" >
           Add to Favorites
         </Button>
       </Flex>
