@@ -21,9 +21,15 @@
     "jsx": "react-jsx",
     "baseUrl": "./",
     "paths": {
-      "components/*": ["components/*"],
-      "@utils/*": ["src/utils/*"],
-      "pages/*": ["pages/*"]
+      "components/*": [
+        "components/*"
+      ],
+      "utils/*": [
+        "src/utils/*"
+      ],
+      "pages/*": [
+        "pages/*"
+      ]
     }
   },
   "include": [

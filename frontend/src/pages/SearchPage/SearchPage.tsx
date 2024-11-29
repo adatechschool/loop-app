@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Flex,
   Input,
@@ -6,9 +7,11 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { IoSearch } from "react-icons/io5";
-import React from "react";
 
-const SearchPage: React.FC = () => {
+import ListCards from "src/components/ListCards/ListCards";
+
+
+const SearchPage: React.FC = (image, title) => {
   return (
     <Flex minH={"100vh"} justify={"center"} bg={"white"}>
       <Stack
@@ -33,8 +36,9 @@ const SearchPage: React.FC = () => {
             borderRadius="16px"
           />
         </InputGroup>
+        <ListCards/>
       </Stack>
-    </Flex>
+      </Flex>
   );
 };
 
