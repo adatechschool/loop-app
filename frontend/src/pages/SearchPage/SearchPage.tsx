@@ -7,11 +7,20 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { IoSearch } from "react-icons/io5";
-
 import ListCards from "src/components/ListCards/ListCards";
 
+const SearchPage: React.FC = () => {
+  // Define handlers for the ListCards component
+  const handleSeeMoreClick = (title: string) => {
+    console.log(`Navigating to details for: ${title}`);
+    // Add navigation logic here
+  };
 
-const SearchPage: React.FC = (image, title) => {
+  const handleAddToFavorites = (title: string) => {
+    console.log(`Added to favorites: ${title}`);
+    // Add favorite logic here
+  };
+
   return (
     <Flex minH={"100vh"} justify={"center"} bg={"white"}>
       <Stack
@@ -36,9 +45,13 @@ const SearchPage: React.FC = (image, title) => {
             borderRadius="16px"
           />
         </InputGroup>
-        <ListCards/>
+        {/* Pass required props to ListCards */}
+        <ListCards
+          onSeeMore={handleSeeMoreClick}
+          onAddToFavorites={handleAddToFavorites}
+        />
       </Stack>
-      </Flex>
+    </Flex>
   );
 };
 
