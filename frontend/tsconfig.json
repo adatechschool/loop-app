@@ -25,7 +25,7 @@
         "components/*"
       ],
       "utils/*": [
-        "src/utils/*"
+        "utils/*"
       ],
       "pages/*": [
         "pages/*"

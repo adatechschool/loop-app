@@ -1,6 +1,6 @@
-import React from 'react';
-import { SimpleGrid } from '@chakra-ui/react';
-import ListCards from 'src/components/ListCards/ListCards';
+import React from "react";
+import { Heading, SimpleGrid } from "@chakra-ui/react";
+import { ListCards } from "src/components";
 
 const ListPage: React.FC = () => {
   const handleSeeMoreClick = (itemName: string) => {
@@ -12,17 +12,15 @@ const ListPage: React.FC = () => {
   };
 
   return (
-    <div>
-      <h1>Page List</h1>
-      <p>Here you can view the list of places</p>
-
+    <>
       <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="15px" p="4">
+        <Heading>Lieux à proximité</Heading>
         <ListCards
           onSeeMore={handleSeeMoreClick}
           onAddToFavorites={handleAddToFavorites}
         />
       </SimpleGrid>
-    </div>
+    </>
   );
 };
 

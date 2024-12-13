@@ -71,14 +71,7 @@ const AddPage = () => {
             </Stack>
           </FormControl>
         </Flex>
-        <Button
-          mt={4}
-          w={"full"}
-          bg="#e86100"
-          color={"white"}
-          type="submit"
-          _hover={{ bg: "#ff7000" }}
-        >
+        <Button mt={4} w={"full"} colorScheme="teal" type="submit">
           Ajouter
         </Button>
       </Stack>
