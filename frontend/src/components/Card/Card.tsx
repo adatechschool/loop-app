@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
 import { Box, Button, Image, Text, VStack, Flex, IconButton, useBreakpointValue, useToast } from '@chakra-ui/react';
-import { Carousel } from 'react-responsive-carousel'; 
-import 'react-responsive-carousel/lib/styles/carousel.min.css'; 
-import { MdFavorite, MdFavoriteBorder } from 'react-icons/md'; 
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
 import { useNavigate } from 'react-router-dom';
 
 interface CardProps {
-  images: string[]; // Array of image URLs
-  title: string; // Title of the card
-  description: string; // Description of the card
+  images: string[];
+  title: string;
+  description: string;
   onSeeMore: (title: string) => void;
-  onAddToFavorites: (title: string) => void;
+  onAddToFavorites: (title: string) => void; // Handles adding/removing from favorites
 }
 
 const Card: React.FC<CardProps> = ({ images, title, description, onSeeMore, onAddToFavorites }) => {
@@ -20,26 +20,38 @@ const Card: React.FC<CardProps> = ({ images, title, description, onSeeMore, onAd
   // Detect if the device is mobile
   const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const [isFavorite, setIsFavorite] = useState(false); // Track favorite status
+  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleCardClick = () => {
-    navigate(`/detail/${title}`); // Navigate to PageDetail with a dynamic route
+    navigate(`/detail/${title}`);
   };
 
   const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev); // Toggle the favorite status
+    setIsFavorite((prev) => !prev);
 
-    // Call the parent function to handle adding to favorites
-    onAddToFavorites(title);
+    if (!isFavorite) {
+      // If not already a favorite, add to favorites
+      onAddToFavorites(title);
 
-    // Show a success toast notification
-    toast({
-      title: "Place Added to Favorites",
-      description: `"${title}" has been added to your favorites.`,
-      status: "success",
-      duration: 3000, // 3 seconds
-      isClosable: true,
-    });
+      toast({
+        title: "Place Added to Favorites",
+        description: `"${title}" has been added to your favorites.`,
+        status: "success",
+        duration: 3000, // 3 seconds
+        isClosable: true,
+      });
+    } else {
+      // If already a favorite, remove from favorites
+      onAddToFavorites(title); // Modify to call a removal function if necessary
+
+      toast({
+        title: "Place Removed from Favorites",
+        description: `"${title}" has been removed from your favorites.`,
+        status: "info",
+        duration: 3000, // 3 seconds
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -49,18 +61,18 @@ const Card: React.FC<CardProps> = ({ images, title, description, onSeeMore, onAd
       borderRadius="md"
       overflow="hidden"
       p="4"
-      onClick={handleCardClick} // Make the entire card clickable
+      onClick={handleCardClick}
       cursor="pointer"
       _hover={{ shadow: 'md' }}
     >
       {/* Carousel for images */}
       <Carousel
-        swipeable={true} // Enable swipe on mobile
-        dynamicHeight={true} // Adjust height based on the image size
-        emulateTouch={true} // Enable touch events on mobile
-        infiniteLoop={true} // Infinite loop for the carousel
-        showArrows={false} // Hide arrows
-        showThumbs={false} // Hide thumbnails
+        swipeable={true}
+        dynamicHeight={true}
+        emulateTouch={true}
+        infiniteLoop={true}
+        showArrows={false}
+        showThumbs={false}
       >
         {images.map((image, index) => (
           <div key={index}>
@@ -86,14 +98,14 @@ const Card: React.FC<CardProps> = ({ images, title, description, onSeeMore, onAd
             toggleFavorite(); // Toggle favorite status and show popup
           }}
         />
-        
+
         {/* Only show the "See More" button on Desktop */}
         {!isMobile && (
           <Button
             colorScheme="teal"
             onClick={(e) => {
               e.stopPropagation(); // Prevent triggering card click
-              onSeeMore(title); // Call the "See More" function
+              onSeeMore(title);
             }}
           >
             See More
