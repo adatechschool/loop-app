@@ -1,6 +1,7 @@
-import React from 'react';
-import Card from '../Card/Card';
-import { mockPlaces } from '../../utils/mock';
+import { Box } from "@chakra-ui/react";
+import React from "react";
+import { Card } from "src/components";
+import { mockPlaces } from "src/utils/mock";
 
 // Define the props for ListCards
 interface ListCardsProps {
@@ -8,7 +9,10 @@ interface ListCardsProps {
   onAddToFavorites: (title: string) => void;
 }
 
-const ListCards: React.FC<ListCardsProps> = ({ onSeeMore, onAddToFavorites }) => {
+const ListCards: React.FC<ListCardsProps> = ({
+  onSeeMore,
+  onAddToFavorites,
+}) => {
   const displayPlaces = mockPlaces.map((place, index) => (
     <Card
       key={index}
@@ -20,7 +24,12 @@ const ListCards: React.FC<ListCardsProps> = ({ onSeeMore, onAddToFavorites }) =>
     />
   ));
 
-  return <>{displayPlaces}</>;
+  return (
+    <>
+      {displayPlaces}
+      <Box h={54} />
+    </>
+  );
 };
 
 export default ListCards;

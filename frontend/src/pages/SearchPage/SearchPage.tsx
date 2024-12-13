@@ -1,6 +1,6 @@
 import React from "react";
 import {
-  Flex,
+  Container,
   Input,
   InputGroup,
   InputRightElement,
@@ -22,15 +22,8 @@ const SearchPage: React.FC = () => {
   };
 
   return (
-    <Flex minH={"100vh"} justify={"center"} bg={"white"}>
-      <Stack
-        spacing={8}
-        p={6}
-        bg={"white"}
-        w={"full"}
-        maxW={"md"}
-        rounded={"xl"}
-      >
+    <Container p={0} minH={"100vh"}>
+      <Stack p={4} w={"full"} maxW={"md"}>
         <InputGroup>
           <InputRightElement
             marginTop={"4px"}
@@ -45,13 +38,12 @@ const SearchPage: React.FC = () => {
             borderRadius="16px"
           />
         </InputGroup>
-        {/* Pass required props to ListCards */}
         <ListCards
           onSeeMore={handleSeeMoreClick}
           onAddToFavorites={handleAddToFavorites}
         />
       </Stack>
-    </Flex>
+    </Container>
   );
 };
 
