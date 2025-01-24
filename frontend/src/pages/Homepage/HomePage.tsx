@@ -1,13 +1,12 @@
-import React from "react"
-import { Map } from 'src/components'
+import React from "react";
+import { MapComponent } from "src/components";
 
 const HomePage = () => {
-    return (
-        <div>
-            <Map />
-        </div>
-    )
+  return (
+    <div>
+      <MapComponent />
+    </div>
+  );
+};
 
-}
-
-export default HomePage
+export default HomePage;
