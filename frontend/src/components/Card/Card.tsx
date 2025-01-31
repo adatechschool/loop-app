@@ -1,57 +1,33 @@
-import React, { useState } from 'react';
-import { Box, Button, Image, Text, VStack, Flex, IconButton, useBreakpointValue, useToast } from '@chakra-ui/react';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
-import { MdFavorite, MdFavoriteBorder } from 'react-icons/md';
+import React from 'react';
+import { Box, Button, Text, VStack, Flex, useBreakpointValue } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import ImageCarousel from './ImageCarrousel';
+import LikeButton from './LikeButton';
 
 interface CardProps {
   images: string[];
   title: string;
   description: string;
+  userName: string;
   onSeeMore: (title: string) => void;
-  onAddToFavorites: (title: string) => void; // Handles adding/removing from favorites
+  onAddToFavorites: (title: string) => void;
+  isFavorite: boolean; // Expect isFavorite to be a boolean
 }
 
-const Card: React.FC<CardProps> = ({ images, title, description, onSeeMore, onAddToFavorites }) => {
+const Card: React.FC<CardProps> = ({
+  images,
+  title,
+  description,
+  userName,
+  onSeeMore,
+  onAddToFavorites,
+  isFavorite, // Destructure this prop
+}) => {
   const navigate = useNavigate();
-  const toast = useToast(); // Chakra's toast for popup notifications
-
-  // Detect if the device is mobile
   const isMobile = useBreakpointValue({ base: true, md: false });
-
-  const [isFavorite, setIsFavorite] = useState(false);
 
   const handleCardClick = () => {
     navigate(`/detail/${title}`);
-  };
-
-  const toggleFavorite = () => {
-    setIsFavorite((prev) => !prev);
-
-    if (!isFavorite) {
-      // If not already a favorite, add to favorites
-      onAddToFavorites(title);
-
-      toast({
-        title: "Place Added to Favorites",
-        description: `"${title}" has been added to your favorites.`,
-        status: "success",
-        duration: 3000, // 3 seconds
-        isClosable: true,
-      });
-    } else {
-      // If already a favorite, remove from favorites
-      onAddToFavorites(title); // Modify to call a removal function if necessary
-
-      toast({
-        title: "Place Removed from Favorites",
-        description: `"${title}" has been removed from your favorites.`,
-        status: "info",
-        duration: 3000, // 3 seconds
-        isClosable: true,
-      });
-    }
   };
 
   return (
@@ -65,22 +41,15 @@ const Card: React.FC<CardProps> = ({ images, title, description, onSeeMore, onAd
       cursor="pointer"
       _hover={{ shadow: 'md' }}
     >
-      {/* Carousel for images */}
-      <Carousel
-        swipeable={true}
-        dynamicHeight={true}
-        emulateTouch={true}
-        infiniteLoop={true}
-        showArrows={false}
-        showThumbs={false}
-      >
-        {images.map((image, index) => (
-          <div key={index}>
-            <Image src={image} alt={title} objectFit="cover" />
-          </div>
-        ))}
-      </Carousel>
+      {/* Display userName */}
+      <Text fontWeight="bold" fontSize="lg" mb="2" textAlign="center" color="gray.600">
+        {userName}
+      </Text>
 
+      {/* Image Carousel */}
+      <ImageCarousel images={images} title={title} />
+
+      {/* Card Content */}
       <VStack p="4" align="flex-start">
         <Text fontWeight="bold" fontSize="xl" mb="2">
           {title}
@@ -88,23 +57,17 @@ const Card: React.FC<CardProps> = ({ images, title, description, onSeeMore, onAd
         <Text mb="2">{description}</Text>
       </VStack>
 
-      {/* Always render the heart button, both on mobile and desktop */}
+      {/* Footer Actions */}
       <Flex justifyContent="space-between" p="4" alignItems="center">
-        <IconButton
-          aria-label="Add to Favorites"
-          icon={isFavorite ? <MdFavorite /> : <MdFavoriteBorder />}
-          onClick={(e) => {
-            e.stopPropagation(); // Prevent triggering card click
-            toggleFavorite(); // Toggle favorite status and show popup
-          }}
-        />
+        {/* Like Button */}
+        <LikeButton title={title} onAddToFavorites={onAddToFavorites} isFavorite={isFavorite} />
 
-        {/* Only show the "See More" button on Desktop */}
+        {/* See More Button */}
         {!isMobile && (
           <Button
             colorScheme="teal"
             onClick={(e) => {
-              e.stopPropagation(); // Prevent triggering card click
+              e.stopPropagation(); 
               onSeeMore(title);
             }}
           >

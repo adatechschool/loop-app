@@ -3,5 +3,6 @@ import AddPage from "./AddPage/AddPage";
 import ListPage from "./ListPage/ListPage";
 import ProfilePage from "./ProfilePage/ProfilePage";
 import SearchPage from "./SearchPage/SearchPage";
+import DetailPage from "./DetailPage/DetailPage";
 
-export { HomePage, ListPage, ProfilePage, SearchPage, AddPage };
+export { HomePage, ListPage, ProfilePage, SearchPage, DetailPage, AddPage };

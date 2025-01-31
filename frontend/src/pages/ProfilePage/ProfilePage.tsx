@@ -68,6 +68,7 @@ const ProfilePage: React.FC = () => {
         <ListCards
           onSeeMore={handleSeeMoreClick}
           onAddToFavorites={handleAddToFavorites}
+          favorites={[]}
         />
       </Stack>
     </Container>
