@@ -9,16 +9,15 @@ import {
 import { IoSearch } from "react-icons/io5";
 import ListCards from "src/components/ListCards/ListCards";
 
-const SearchPage: React.FC = () => {
-  // Define handlers for the ListCards component
+interface SearchPageProps {
+  favorites: string[];
+  onAddToFavorites: (title: string) => void;
+}
+
+const SearchPage: React.FC<SearchPageProps> = ({ favorites, onAddToFavorites }) => {
   const handleSeeMoreClick = (title: string) => {
     console.log(`Navigating to details for: ${title}`);
-    // Add navigation logic here
-  };
-
-  const handleAddToFavorites = (title: string) => {
-    console.log(`Added to favorites: ${title}`);
-    // Add favorite logic here
+    
   };
 
   return (
@@ -39,8 +38,9 @@ const SearchPage: React.FC = () => {
           />
         </InputGroup>
         <ListCards
+          favorites={favorites}  
           onSeeMore={handleSeeMoreClick}
-          onAddToFavorites={handleAddToFavorites}
+          onAddToFavorites={onAddToFavorites}
         />
       </Stack>
     </Container>
