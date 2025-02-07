@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Text, VStack, Flex, useBreakpointValue } from '@chakra-ui/react';
+import { Box, Button, Text, VStack, Flex, Avatar, useBreakpointValue } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import ImageCarousel from './ImageCarrousel';
 import LikeButton from './LikeButton';
@@ -9,9 +9,10 @@ interface CardProps {
   title: string;
   description: string;
   userName: string;
+  userAvatar?: string;  // New prop for avatar
   onSeeMore: (title: string) => void;
   onAddToFavorites: (title: string) => void;
-  isFavorite: boolean; // Expect isFavorite to be a boolean
+  isFavorite: boolean;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -19,9 +20,10 @@ const Card: React.FC<CardProps> = ({
   title,
   description,
   userName,
+  userAvatar, // Receive avatar prop
   onSeeMore,
   onAddToFavorites,
-  isFavorite, // Destructure this prop
+  isFavorite,
 }) => {
   const navigate = useNavigate();
   const isMobile = useBreakpointValue({ base: true, md: false });
@@ -41,10 +43,13 @@ const Card: React.FC<CardProps> = ({
       cursor="pointer"
       _hover={{ shadow: 'md' }}
     >
-      {/* Display userName */}
-      <Text fontWeight="bold" fontSize="lg" mb="2" textAlign="center" color="gray.600">
-        {userName}
-      </Text>
+      {/* Display avatar and username */}
+      <Flex align="center" mt="3"  mb="6">
+        <Avatar size="sm" src={userAvatar} mr="2" />
+        <Text fontWeight="bold" fontSize="lg" color="gray.600">
+          {userName}
+        </Text>
+      </Flex>
 
       {/* Image Carousel */}
       <ImageCarousel images={images} title={title} />
@@ -59,15 +64,12 @@ const Card: React.FC<CardProps> = ({
 
       {/* Footer Actions */}
       <Flex justifyContent="space-between" p="4" alignItems="center">
-        {/* Like Button */}
         <LikeButton title={title} onAddToFavorites={onAddToFavorites} isFavorite={isFavorite} />
-
-        {/* See More Button */}
         {!isMobile && (
           <Button
             colorScheme="teal"
             onClick={(e) => {
-              e.stopPropagation(); 
+              e.stopPropagation();
               onSeeMore(title);
             }}
           >
