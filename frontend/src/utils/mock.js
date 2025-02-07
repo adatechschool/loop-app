@@ -4,6 +4,7 @@ export const mockUsers = [
     name: "Martine Carre",
     username: "mcarre",
     email: "martine_carre@gmail.com",
+    profilePicture: "https://i.pravatar.cc/150?img=10", // Example avatar
     geo: {
       lat: 48.849726,
       lng: 2.319596,
@@ -14,6 +15,7 @@ export const mockUsers = [
     name: "Nicole Fleury",
     username: "nfleury1",
     email: "nicole_fleury@zohomail.com",
+    profilePicture: "https://i.pravatar.cc/150?img=15",
     geo: {
       lat: 48.885101,
       lng: 2.298035,
@@ -24,6 +26,7 @@ export const mockUsers = [
     name: "Amaryllis",
     username: "Kittycat3",
     email: "amaryllis_noel@yahoo.com",
+    profilePicture: "https://i.pravatar.cc/150?img=20",
     geo: {
       lat: 48.867143,
       lng: 2.29906,

@@ -1,19 +1,20 @@
 import { Box } from "@chakra-ui/react";
 import React from "react";
 import Card from '../Card/Card';
-import { mockPlaces } from '../../utils/mock';
-import { mockUsers } from '../../utils/mock';
+import { mockPlaces, mockUsers } from '../../utils/mock';
 
 interface ListCardsProps {
   favorites: string[];
   onSeeMore: (title: string) => void;
   onAddToFavorites: (title: string) => void;
-  isFavorite?: boolean;
 }
 
 const ListCards: React.FC<ListCardsProps> = ({ favorites, onSeeMore, onAddToFavorites }) => {
   const displayPlaces = mockPlaces.map((place, index) => {
-    const isFavorite = favorites.includes(place.name);  // Check if the place is in the favorites
+    const isFavorite = favorites.includes(place.name);
+
+    // Find the user based on the author field
+    const user = mockUsers.find((user) => user.username === place.author);
 
     return (
       <Card
@@ -21,8 +22,9 @@ const ListCards: React.FC<ListCardsProps> = ({ favorites, onSeeMore, onAddToFavo
         images={place.image}
         title={place.name}
         description={place.description}
-        userName={mockUsers.find((user) => user.id === place.id)?.name || "Unknown User"}
-        isFavorite={isFavorite}  
+        userName={user ? user.username : "Unknown"}
+        userAvatar={user?.profilePicture || "https://via.placeholder.com/150"}  // Provide default avatar
+        isFavorite={isFavorite}
         onSeeMore={onSeeMore}
         onAddToFavorites={onAddToFavorites}
       />
