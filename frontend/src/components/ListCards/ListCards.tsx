@@ -1,26 +1,31 @@
+// src/components/ListCards/ListCards.tsx
 import { Box, Stack } from "@chakra-ui/react";
 import React from "react";
-import Card from "../Card/Card"; // Assuming this is your card component
+import Card from "../Card/Card";
 import { mockPlaces, mockUsers } from "../../utils/mock";
 
 interface ListCardsProps {
   favorites: string[]; // Array of favorite place names
   onSeeMore: (title: string) => void;
-  onAddToFavorites: (title: string) => void; // Function to add or remove favorites
+  onAddToFavorites: (title: string) => void;
+  data?: typeof mockPlaces; // Optional: array of places to display
 }
 
 const ListCards: React.FC<ListCardsProps> = ({
   favorites,
   onSeeMore,
   onAddToFavorites,
+  data,
 }) => {
+  // Use provided data if available; otherwise, use all mockPlaces
+  const places = data || mockPlaces;
+
   return (
     <Stack spacing={4}>
-      {mockPlaces.map((place, index) => {
-        // Check if this place is in favorites
+      {places.map((place, index) => {
+        // Determine if the current place is a favorite
         const isFavorite = favorites.includes(place.name);
-
-        // Find the user based on the author field
+        // Find the user data for this card
         const user = mockUsers.find((user) => user.username === place.author);
 
         return (
@@ -30,10 +35,10 @@ const ListCards: React.FC<ListCardsProps> = ({
             title={place.name}
             description={place.description}
             userName={user ? user.username : "Unknown"}
-            userAvatar={user?.profilePicture || "https://via.placeholder.com/150"} // Provide default avatar
-            isFavorite={isFavorite} // Pass favorite status to Card component
+            userAvatar={user?.profilePicture || "https://via.placeholder.com/150"}
+            isFavorite={isFavorite}
             onSeeMore={onSeeMore}
-            onAddToFavorites={onAddToFavorites} // Pass function to Card component
+            onAddToFavorites={onAddToFavorites}
           />
         );
       })}
