@@ -1,5 +1,5 @@
 import React from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 import "./style.css";
 import L from "leaflet";
 
@@ -44,14 +44,21 @@ const Map = () => {
 };
 
 const MapComponent = () => {
-  const DEFAULT_LOCATION: [number, number] = [50.740717, 2.258634];
+  const params = new URLSearchParams(window.location.search);
+  const lat = parseFloat(params.get("lat") || "50.740717");
+  const lng = parseFloat(params.get("lng") || "2.258634");
+
+  // need to setView after the return to the map page
+
   return (
     <MapContainer
-      center={DEFAULT_LOCATION}
-      zoom={16}
+      center={[lat, lng]}
+      zoom={20}
       style={{ height: "100vh", width: "100%" }}
     >
       <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+      {}
+      <Marker position={[lat, lng]} />
       <Map />
     </MapContainer>
   );
