@@ -1,0 +1,99 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model PlaceUser {
+  id           String   @id @default(uuid())
+  creationDate DateTime @default(now())
+  user         User     @relation(fields: [userId], references: [id])
+  userId       String
+  place        Place    @relation(fields: [placeId], references: [id])
+  placeId      String
+}
+
+model PlaceType {
+  id      String @id @default(uuid())
+  place   Place  @relation(fields: [placeId], references: [id])
+  placeId String
+  type    Type   @relation(fields: [typeId], references: [id])
+  typeId  String
+}
+
+model PlaceImage {
+  id      String @id @default(uuid())
+  place   Place  @relation(fields: [placeId], references: [id])
+  placeId String
+  image   Image  @relation(fields: [imageId], references: [id])
+  imageId String
+}
+
+model ImageUser {
+  id         String   @id @default(uuid())
+  uploadDate DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id])
+  userId     String
+  image      Image    @relation(fields: [imageId], references: [id])
+  imageId    String
+}
+
+model User {
+  id             String      @id @default(uuid())
+  name           String
+  username       String      @unique
+  email          String      @unique
+  password       String
+  role           String
+  profilePicture String?
+  places         PlaceUser[]
+  favorites      Favorite[]
+  images         ImageUser[]
+}
+
+model Place {
+  id            String       @id @default(uuid())
+  name          String
+  address       String
+  accessibility String?
+  author        String
+  geo           Geo          @relation(fields: [geoId], references: [id])
+  geoId         String
+  types         PlaceType[]
+  images        PlaceImage[]
+  users         PlaceUser[]
+  favorites     Favorite[]
+}
+
+model Geo {
+  id     String  @id @default(uuid())
+  lat    Float
+  lng    Float
+  places Place[]
+}
+
+model Type {
+  id     String      @id @default(uuid())
+  name   String
+  places PlaceType[]
+}
+
+model Favorite {
+  id        String   @id @default(uuid())
+  addedDate DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    String
+  place     Place    @relation(fields: [placeId], references: [id])
+  placeId   String
+}
+
+model Image {
+  id      String       @id @default(uuid())
+  url     String
+  caption String?
+  places  PlaceImage[]
+  users   ImageUser[]
+}
