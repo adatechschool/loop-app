@@ -1,9 +1,13 @@
 
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { HomePage, ListPage, AddPage, SearchPage, ProfilePage, DetailPage } from "./pages";
+import { HomePage, ListPage, AddPage, SearchPage, ProfilePage, DetailPage, } from "./pages";
+import LogIn from "./pages/LogInPage/LogIn";
 import { Navbar } from "./components";
 import { mockPlaces } from "./utils/mock"; 
+import LogInForm from "./pages/LogInPage/LogInForm"; 
+import SignUpForm from "./pages/LogInPage/SignUpForm"; 
+
 
 const App: React.FC = () => {
   
@@ -36,6 +40,9 @@ const App: React.FC = () => {
           path="/profile"
           element={<ProfilePage favorites={favorites} onAddToFavorites={handleAddToFavorites} />}
         />
+       <Route path="/login" element={<LogIn />} />
+  <Route path="/login-form" element={<LogInForm />} />
+  <Route path="/signup-form" element={<SignUpForm />} />
         <Route
           path="/detail/:name"
           element={
