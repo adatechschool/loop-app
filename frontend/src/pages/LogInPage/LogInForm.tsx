@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Box, Button, Input, Stack, Heading, Container } from '@chakra-ui/react';
+import { Box, Button, Input, Stack, Heading, Container, } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
+import BackButton from 'src/components/BackButton';
 
 const LoginForm: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -15,7 +16,12 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <Container p={4} minH="100vh" display="flex" alignItems="center" justifyContent="center">
+    <Container p={4} minH="100vh" display="flex" alignItems="center" justifyContent="center" position="relative">
+     
+      <Box position="absolute" top={4} left={4}>
+        <BackButton />
+      </Box>
+
       <Box w="full" maxW="md" p={6} borderWidth={1} borderRadius="md">
         <Heading textAlign="center" mb={6}>Connexion</Heading>
         <Stack spacing={4} as="form" onSubmit={handleSubmit}>
