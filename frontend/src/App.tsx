@@ -1,19 +1,16 @@
-
 import React, { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { HomePage, ListPage, AddPage, SearchPage, ProfilePage, DetailPage, } from "./pages";
+import { HomePage, ListPage, AddPage, SearchPage, ProfilePage, DetailPage } from "./pages";
 import LogIn from "./pages/LogInPage/LogIn";
-import { Navbar } from "./components";
-import { mockPlaces } from "./utils/mock"; 
-import LogInForm from "./pages/LogInPage/LogInForm"; 
-import SignUpForm from "./pages/LogInPage/SignUpForm"; 
-
+import LogInForm from "./pages/LogInPage/LogInForm";
+import SignUpForm from "./pages/LogInPage/SignUpForm";
+import { mockPlaces } from "./utils/mock";
+import MainLayout from "./layouts/MainLayout";
+import AuthLayout from "./layouts/AuthLayout";
 
 const App: React.FC = () => {
-  
   const [favorites, setFavorites] = useState<string[]>([]);
 
-  
   const handleAddToFavorites = (name: string) => {
     setFavorites((prevFavorites) =>
       prevFavorites.includes(name)
@@ -23,38 +20,24 @@ const App: React.FC = () => {
   };
 
   return (
-    <div>
-      <Navbar />
-      <Routes>
+    <Routes>
+      {/* Pages avec Navbar */}
+      <Route element={<MainLayout />}>
         <Route path="/" element={<HomePage />} />
-        <Route
-          path="/list"
-          element={<ListPage favorites={favorites} onAddToFavorites={handleAddToFavorites} />}
-        />
+        <Route path="/list" element={<ListPage favorites={favorites} onAddToFavorites={handleAddToFavorites} />} />
         <Route path="/add" element={<AddPage />} />
-        <Route
-          path="/search"
-          element={<SearchPage favorites={favorites} onAddToFavorites={handleAddToFavorites} />}
-        />
-        <Route
-          path="/profile"
-          element={<ProfilePage favorites={favorites} onAddToFavorites={handleAddToFavorites} />}
-        />
-       <Route path="/login" element={<LogIn />} />
-  <Route path="/login-form" element={<LogInForm />} />
-  <Route path="/signup-form" element={<SignUpForm />} />
-        <Route
-          path="/detail/:name"
-          element={
-            <DetailPage
-              data={mockPlaces}
-              favorites={favorites}
-              onAddToFavorites={handleAddToFavorites}
-            />
-          }
-        />
-      </Routes>
-    </div>
+        <Route path="/search" element={<SearchPage favorites={favorites} onAddToFavorites={handleAddToFavorites} />} />
+        <Route path="/profile" element={<ProfilePage favorites={favorites} onAddToFavorites={handleAddToFavorites} />} />
+        <Route path="/detail/:name" element={<DetailPage data={mockPlaces} favorites={favorites} onAddToFavorites={handleAddToFavorites} />} />
+      </Route>
+
+      {/* Pages sans Navbar (Connexion) */}
+      <Route element={<AuthLayout />}>
+        <Route path="/login" element={<LogIn />} />
+        <Route path="/login-form" element={<LogInForm />} />
+        <Route path="/signup-form" element={<SignUpForm />} />
+      </Route>
+    </Routes>
   );
 };
 
