@@ -7,28 +7,22 @@ import {
   useTheme,
 } from "@chakra-ui/react";
 import { FiHome } from "react-icons/fi";
-import { BiDirections } from "react-icons/bi"; 
+import { BiDirections } from "react-icons/bi";
 import { MdAddBox } from "react-icons/md";
 import { IoSearch } from "react-icons/io5";
 import { BsPerson } from "react-icons/bs";
-import { Link, useLocation } from "react-router-dom"; 
+import { Link, useLocation } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const theme = useTheme();
-  const location = useLocation(); 
+  const location = useLocation();
 
-  
   const isActive = (path: string) => location.pathname === path;
 
-  
-  const handleIconClick = () => {
-    
-  };
+  const handleIconClick = () => {};
 
- 
-  const activeColor = "#38A169"; 
+  const activeColor = "#38A169";
 
-  
   const position = useBreakpointValue<"static" | "fixed">({
     base: "fixed",
     md: "static",
@@ -42,18 +36,17 @@ const Navbar: React.FC = () => {
     <Box
       as="nav"
       width="100%"
-      p="22px 0" 
-      bg={{ base: "white", md: theme.colors.primary }} 
+      p="22px 0"
+      bg={{ base: "white", md: theme.colors.primary }}
       color="white"
       position={position}
       {...{ [bottomOrTop!]: 0 }}
       zIndex="1000"
-      shadow="md" 
+      shadow="md"
     >
       <Flex align="center" justify="space-around">
         <Link to="/">
           {" "}
-          {/* Home route */}
           <IconButton
             icon={<FiHome />}
             aria-label="Home"
@@ -66,9 +59,8 @@ const Navbar: React.FC = () => {
         </Link>
         <Link to="/list">
           {" "}
-         
           <IconButton
-            icon={<BiDirections />} 
+            icon={<BiDirections />}
             aria-label="List"
             variant="ghost"
             fontSize="25px"
@@ -79,7 +71,6 @@ const Navbar: React.FC = () => {
         </Link>
         <Link to="/add">
           {" "}
-          
           <IconButton
             icon={<MdAddBox />}
             aria-label="Add"
@@ -92,7 +83,6 @@ const Navbar: React.FC = () => {
         </Link>
         <Link to="/search">
           {" "}
-          {/* Search route */}
           <IconButton
             icon={<IoSearch />}
             aria-label="Search"
@@ -105,7 +95,6 @@ const Navbar: React.FC = () => {
         </Link>
         <Link to="/profile">
           {" "}
-          {/* Profile route */}
           <IconButton
             icon={<BsPerson />}
             aria-label="Profile"

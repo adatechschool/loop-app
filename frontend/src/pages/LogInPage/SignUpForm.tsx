@@ -1,36 +1,42 @@
-import React, { useState } from 'react';
-import { Box, Button, Input, Stack, Heading, Container } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import BackButton from 'src/components/BackButton';
-import axios from 'axios';
+import React, { useState } from "react";
+import {
+  Box,
+  Button,
+  Input,
+  Stack,
+  Heading,
+  Container,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import BackButton from "src/components/BackButton";
+import PORT from "src/utils/constant";
 
 const SignupForm: React.FC = () => {
-  const [name, setName] = useState('');
-  const [username, setUsername] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [profilePicture, setProfilePicture] = useState('');
-  const [error, setError] = useState<string>('');
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
+  const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:5001/signup', {
+      const response = await axios.post(`http://localhost:${PORT}/api/signup`, {
         name,
         username,
         email,
         password,
-        role: 'user', 
-        profilePicture, 
+        role: "user",
+        profilePicture,
       });
-      
-      
-      console.log('Réponse de l\'API:', response.data);
-      navigate('/profile');
+
+      console.log("Réponse de l'API:", response.data);
+      navigate("/profile");
     } catch (err: any) {
-     
       if (err.response) {
         console.error("API Error response:", err.response);
         setError(err.response?.data?.message || "Erreur lors de l'inscription");
@@ -43,7 +49,13 @@ const SignupForm: React.FC = () => {
   };
 
   return (
-    <Container p={4} minH="100vh" display="flex" alignItems="center" justifyContent="center">
+    <Container
+      p={4}
+      minH="100vh"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
       <Box position="absolute" top={4} left={4}>
         <BackButton />
       </Box>
