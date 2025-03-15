@@ -3,10 +3,11 @@ services:
     build: .
     container_name: loop-backend
     ports:
-      - "5001:5000"
+      - "5000:5000"
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://neondb_owner:npg_exafjqoO4HQ7@ep-fragrant-block-a2xzv13k-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require
+      - SESSION_SECRET=aW3jk9XGzFsd7paS2kYnz4vBQKUbF6J7Eow5N4LZaAxJtH21i3bL4P8J3h9gH8g8n
     depends_on:
       - postgres
     volumes:

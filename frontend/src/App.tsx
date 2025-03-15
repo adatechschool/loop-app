@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import {
   HomePage,
   ListPage,
@@ -15,7 +15,7 @@ import { mockPlaces } from "./utils/mock";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import PrivateRoute from "./routes/PrivateRoute";
-import LoginPage from "./pages/LogInPage/LogIn";;
+import LoginPage from "./pages/LogInPage/LogIn";
 
 const App: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -28,13 +28,12 @@ const App: React.FC = () => {
     );
   };
 
-  const token = localStorage.getItem('token')
+  const token = localStorage.getItem("token");
 
   return (
     <Routes>
-      {/* Pages avec Navbar */}
       <Route element={<MainLayout />}>
-        <Route path="/" element={token ? <HomePage /> : <LoginPage/>} />
+        <Route path="/" element={<HomePage />} />
         <Route
           path="/list"
           element={
@@ -47,9 +46,13 @@ const App: React.FC = () => {
         <Route
           path="/add"
           element={
-            <PrivateRoute>
-              <AddPage />
-            </PrivateRoute>
+            token ? (
+              <PrivateRoute>
+                <AddPage />
+              </PrivateRoute>
+            ) : (
+              <LoginPage />
+            )
           }
         />
         <Route
@@ -64,12 +67,16 @@ const App: React.FC = () => {
         <Route
           path="/profile"
           element={
-            <PrivateRoute>
-              <ProfilePage
-                favorites={favorites}
-                onAddToFavorites={handleAddToFavorites}
-              />
-            </PrivateRoute>
+            token ? (
+              <PrivateRoute>
+                <ProfilePage
+                  favorites={favorites}
+                  onAddToFavorites={handleAddToFavorites}
+                />
+              </PrivateRoute>
+            ) : (
+              <LoginPage />
+            )
           }
         />
         <Route
@@ -83,8 +90,6 @@ const App: React.FC = () => {
           }
         />
       </Route>
-
-      {/* Pages sans Navbar (Connexion) */}
       <Route element={<AuthLayout />}>
         <Route path="/login" element={<LogIn />} />
         <Route path="/login-form" element={<LogInForm />} />

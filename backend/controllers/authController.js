@@ -1,7 +1,8 @@
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
-
-const SECRET_KEY = 'adminloop123'
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const bcrypt = require("bcryptjs");
 
 exports.login = (req, res, next) => {
   passport.authenticate('local', (err, user, info) => {
@@ -11,8 +12,7 @@ exports.login = (req, res, next) => {
     req.logIn(user, (err) => {
       if (err) return next(err);
 
-      
-      const token = jwt.sign({ id: user._id, username: user.username }, SECRET_KEY, {
+      const token = jwt.sign({ id: user._id, username: user.username }, process.env.SESSION_SECRET, {
         expiresIn: '1h'
       });
 
@@ -20,3 +20,44 @@ exports.login = (req, res, next) => {
     });
   })(req, res, next);
 };
+
+exports.signup = async (req, res) => {  
+      const {
+      name,
+      username,
+      email,
+      password,
+      role = "user",
+      profilePicture,
+    } = req.body;
+  
+    try {
+      const existingUser = await prisma.user.findUnique({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ message: "Utilisateur déjà existant !" });
+      }
+  
+      const hashedPassword = await bcrypt.hash(password, 10);
+  
+      const newUser = await prisma.user.create({
+        data: {
+          name,
+          username,
+          email,
+          password: hashedPassword,
+          role,
+          profilePicture,
+        },
+      });
+      const { password: _, ...userWithoutPassword } = newUser;
+      res
+        .status(201)
+        .json({ message: "Utilisateur créé avec succès !", user: userWithoutPassword });
+    } catch (err) {
+      console.error("Error during signup:", err);
+      res
+        .status(500)
+        .json({ message: "Erreur lors de l'inscription", error: err.message });
+    }
+  }
+
