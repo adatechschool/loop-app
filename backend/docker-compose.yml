@@ -3,7 +3,7 @@ services:
     build: .
     container_name: loop-backend
     ports:
-      - "5001:5000"
+      - "5000:5000" # Mapping du port 3000 du conteneur au port 3000 de l'hôte
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://neondb_owner:npg_exafjqoO4HQ7@ep-fragrant-block-a2xzv13k-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require
