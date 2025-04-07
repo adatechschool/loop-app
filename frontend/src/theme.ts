@@ -1,3 +1,4 @@
+// src/theme.ts
 import { extendTheme } from '@chakra-ui/react';
 
 const theme = extendTheme({
@@ -20,6 +21,10 @@ const theme = extendTheme({
     hover: '#CFCFCF',
     selected: '#C3A8F9',
     icon: 'black',
+  },
+  fonts: {
+    heading: "'Manrope', sans-serif", // Utilisez Manrope pour les titres
+    body: "'Manrope', sans-serif",    // Utilisez Manrope pour le texte du corps
   },
   components: {
     IconButton: {

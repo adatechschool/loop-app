@@ -4,15 +4,24 @@ import { useNavigate } from 'react-router-dom';
 import ImageCarousel from './ImageCarrousel';
 import LikeButton from './LikeButton';
 
+
+const pastelColors = [
+  "#f6a5c0",
+  "#b0e0e6",
+  "#98fb98",
+  "#fffacd",
+];
+
 interface CardProps {
   images: string[];
   title: string;
   description: string;
   userName: string;
-  userAvatar?: string;  // New prop for avatar
+  userAvatar?: string;
   onSeeMore: (title: string) => void;
   onAddToFavorites: (title: string) => void;
   isFavorite: boolean;
+  index: number;
 }
 
 const Card: React.FC<CardProps> = ({
@@ -20,13 +29,17 @@ const Card: React.FC<CardProps> = ({
   title,
   description,
   userName,
-  userAvatar, // Receive avatar prop
+  userAvatar,
   onSeeMore,
   onAddToFavorites,
   isFavorite,
+  index,
 }) => {
   const navigate = useNavigate();
   const isMobile = useBreakpointValue({ base: true, md: false });
+
+
+  const cardColor = pastelColors[index % pastelColors.length];
 
   const handleCardClick = () => {
     navigate(`/detail/${title}`);
@@ -39,22 +52,24 @@ const Card: React.FC<CardProps> = ({
       borderRadius="md"
       overflow="hidden"
       p="4"
+      bg={cardColor}
+      transition="background-color 0.3s ease"
       onClick={handleCardClick}
       cursor="pointer"
       _hover={{ shadow: 'md' }}
     >
-      {/* Display avatar and username */}
-      <Flex align="center" mt="3"  mb="6">
+
+      <Flex align="center" mt="3" mb="6">
         <Avatar size="sm" src={userAvatar} mr="2" />
         <Text fontWeight="bold" fontSize="lg" color="gray.600">
           {userName}
         </Text>
       </Flex>
 
-      {/* Image Carousel */}
+
       <ImageCarousel images={images} title={title} />
 
-      {/* Card Content */}
+
       <VStack p="4" align="flex-start">
         <Text fontWeight="bold" fontSize="xl" mb="2">
           {title}
@@ -62,7 +77,7 @@ const Card: React.FC<CardProps> = ({
         <Text mb="2">{description}</Text>
       </VStack>
 
-      {/* Footer Actions */}
+
       <Flex justifyContent="space-between" p="4" alignItems="center">
         <LikeButton title={title} onAddToFavorites={onAddToFavorites} isFavorite={isFavorite} />
         {!isMobile && (

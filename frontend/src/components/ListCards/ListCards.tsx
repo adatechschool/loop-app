@@ -1,4 +1,3 @@
-// src/components/ListCards/ListCards.tsx
 import { Box, Stack } from "@chakra-ui/react";
 import React from "react";
 import Card from "../Card/Card";
@@ -23,14 +22,15 @@ const ListCards: React.FC<ListCardsProps> = ({
   return (
     <Stack spacing={4}>
       {places.map((place, index) => {
-        // Determine if the current place is a favorite
+
         const isFavorite = favorites.includes(place.name);
-        // Find the user data for this card
+
         const user = mockUsers.find((user) => user.username === place.author);
 
         return (
           <Card
             key={index}
+            index={index}  // Pass the index prop to the Card component
             images={place.image}
             title={place.name}
             description={place.description}

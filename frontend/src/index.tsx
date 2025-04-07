@@ -1,21 +1,21 @@
 // src/index.tsx
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import * as serviceWorkerRegistration from './serviceWorkerRegistration';
-import reportWebVitals from './reportWebVitals';
-import { ChakraProvider } from '@chakra-ui/react';
-import { BrowserRouter as Router } from 'react-router-dom'; // Import BrowserRouter
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { ChakraProvider } from "@chakra-ui/react"; // ChakraProvider pour appliquer le thème
+import App from "./App";
+import theme from "./theme"; // Importez votre fichier de thème personnalisé
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import reportWebVitals from "./reportWebVitals";
+import { BrowserRouter as Router } from "react-router-dom"; // Import BrowserRouter
 
 const root = ReactDOM.createRoot(
-  document.getElementById('root') as HTMLElement
+  document.getElementById("root") as HTMLElement
 );
 
 root.render(
   <React.StrictMode>
-    <ChakraProvider>
-      {/* Wrap the App with Router to enable routing */}
+    <ChakraProvider theme={theme}>
+      {/* Enveloppez l'application avec Router pour activer la gestion des routes */}
       <Router>
         <App />
       </Router>
@@ -23,8 +23,8 @@ root.render(
   </React.StrictMode>
 );
 
-// Service worker registration (for PWA functionality)
+// Enregistrement du service worker (fonctionnalité PWA)
 serviceWorkerRegistration.register();
 
-// Web Vitals (for performance monitoring)
+// Web Vitals (pour surveiller la performance)
 reportWebVitals();

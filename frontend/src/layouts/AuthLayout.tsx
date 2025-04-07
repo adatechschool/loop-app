@@ -1,11 +1,13 @@
+// src/layouts/AuthLayout.tsx
 import React from "react";
 import { Outlet } from "react-router-dom";
+import { Center } from "@chakra-ui/react";
 
 const AuthLayout: React.FC = () => {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100vh" }}>
+    <Center h="100vh">
       <Outlet />
-    </div>
+    </Center>
   );
 };
 
