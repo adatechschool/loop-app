@@ -6,10 +6,10 @@ import LikeButton from './LikeButton';
 
 
 const pastelColors = [
-  "#f6a5c0",
+  "#f1c5f5",
   "#b0e0e6",
   "#98fb98",
-  "#fffacd",
+  "#f0f6a0",
 ];
 
 interface CardProps {

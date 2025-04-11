@@ -10,7 +10,7 @@ const BackgroundWrapper: React.FC<BackgroundWrapperProps> = ({ children }) => {
     return (
         <Box
             minH="100vh"
-            bg="linear-gradient(135deg, #2c3e50 0%, #34495e 100%)"  // Default gradient (blue to pink for desktop)
+            bg="#0b0b59"  // Default blue background
 
         >
             {children}

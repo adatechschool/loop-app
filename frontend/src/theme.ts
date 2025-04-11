@@ -17,10 +17,10 @@ const theme = extendTheme({
     quarter: '25%',
   },
   colors: {
-    primary: '#E6E6E6',
-    hover: '#CFCFCF',
-    selected: '#C3A8F9',
-    icon: 'black',
+    primary: '#d3dd5a',
+    hover: '#c8aeec',
+    selected: '#d3dd5a',
+    icon: '#171947',
   },
   fonts: {
     heading: "'Manrope', sans-serif", // Utilisez Manrope pour les titres

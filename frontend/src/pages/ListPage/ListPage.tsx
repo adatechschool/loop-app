@@ -31,13 +31,13 @@ const ListPage: React.FC<ListPageProps> = ({ favorites, onAddToFavorites }) => {
         </Heading>
       </Box>
 
-      {/* Main Content Below Sticky Header */}
-      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="15px" p="4" mt={10}>
-        {/* Pass the favorites and onAddToFavorites to ListCards */}
+
+      <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="15px" p="4" mt={8}>
+
         <ListCards
-          favorites={favorites}  // Array of favorite places
-          onSeeMore={handleSeeMoreClick}  // Function to handle See More
-          onAddToFavorites={onAddToFavorites}  // Function to add/remove from favorites
+          favorites={favorites}
+          onSeeMore={handleSeeMoreClick}
+          onAddToFavorites={onAddToFavorites}
         />
       </SimpleGrid>
     </Box>
