@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import BackButton from "src/components/BackButton";
-import PORT from 'src/utils/constant';
+import PORT from "src/utils/constant";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -28,17 +28,12 @@ const LoginForm = () => {
         password,
       });
 
-      const { token } = response.data;
-      console.log(response.data);
-      localStorage.setItem("token", token);
-
-      console.log("Connexion réussie, token :", response.data.token);
-      console.log("Réponse du serveur:", response.data);
-
+      const { user } = response.data;
+      localStorage.setItem("token", user.token);
       navigate("/profile");
     } catch (error) {
       setErrorMessage("Mot de passe ou nom d'utilisateur invalide");
-      console.error("Erreur :", (error as Error).message);
+      console.error("Error :", (error as Error).message);
     }
   };
   return (
