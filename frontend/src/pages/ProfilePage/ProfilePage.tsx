@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Center,
@@ -13,38 +12,81 @@ import {
   TabPanels,
   Tab,
   TabPanel,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  IconButton,
+  SkeletonCircle,
+  SkeletonText,
 } from "@chakra-ui/react";
-import { mockUsers, mockPlaces } from "src/utils/mock";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import { useNavigate } from "react-router-dom";
+import { mockPlaces } from "src/utils/mock";
 import ListCards from "src/components/ListCards/ListCards";
+import useQueryUser from "src/hooks/useQueryUser";
 
 interface ProfilePageProps {
   favorites: string[];
   onAddToFavorites: (title: string) => void;
 }
 
-const ProfilePage: React.FC<ProfilePageProps> = ({ favorites, onAddToFavorites }) => {
-  
-  const favoritePlaces = mockPlaces.filter((place) => favorites.includes(place.name));
+const ProfilePage: React.FC<ProfilePageProps> = ({
+  favorites,
+  onAddToFavorites,
+}) => {
+  const navigate = useNavigate();
+  const { user, loading } = useQueryUser();
+  const favoritePlaces = mockPlaces.filter((place) =>
+    favorites.includes(place.name)
+  );
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
+  };
 
   return (
     <Container p={0} minH="100vh">
-    
-      <Stack bg="lightgrey" p={4} w="full" maxW="md">
-        <Text fontWeight="bold" textAlign="right" cursor="pointer">
-          Edit
-        </Text>
+      <Stack p={4} w="full" maxW="md">
+        <Container display="flex" justifyContent="flex-end">
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Options"
+              icon={<HamburgerIcon />}
+            />
+            <MenuList>
+              <MenuItem>Paramètres</MenuItem>
+              <MenuItem color="red" onClick={handleLogout}>
+                Se déconnecter
+              </MenuItem>
+            </MenuList>
+          </Menu>
+        </Container>
+
         <Center>
           <Box maxW="320px" w="full" p={6} textAlign="center">
-            <Avatar
-              size="2xl"
-              src="https://images.unsplash.com/photo-1520810627419-35e362c5dc07?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200"
-            />
-            <Heading>@{mockUsers[0].username}</Heading>
+            {loading ? (
+              <>
+                <Stack align="center" spacing={4}>
+                  <SkeletonCircle size="20" />
+                </Stack>
+                <SkeletonText mt={2} noOfLines={1} skeletonHeight="6" />
+              </>
+            ) : (
+              <>
+                <Avatar
+                  size="2xl"
+                  src={user?.profilePicture || "https://bit.ly/broken-link"}
+                />
+                <Heading>{user?.username}</Heading>
+              </>
+            )}
           </Box>
         </Center>
       </Stack>
 
-    
       <Tabs variant="soft-rounded" colorScheme="teal" p={4} w="full" maxW="md">
         <TabList>
           <Tab>Mes Lieux</Tab>
@@ -52,24 +94,25 @@ const ProfilePage: React.FC<ProfilePageProps> = ({ favorites, onAddToFavorites }
         </TabList>
 
         <TabPanels>
-          
           <TabPanel>
             <ListCards
               favorites={favorites}
-              onSeeMore={(title) => console.log(`Navigating to details for: ${title}`)}
+              onSeeMore={(title) =>
+                console.log(`Navigating to details for: ${title}`)
+              }
               onAddToFavorites={onAddToFavorites}
-              
             />
           </TabPanel>
 
-          
           <TabPanel>
             {favoritePlaces.length > 0 ? (
               <ListCards
                 favorites={favorites}
-                onSeeMore={(title) => console.log(`Navigating to details for: ${title}`)}
+                onSeeMore={(title) =>
+                  console.log(`Navigating to details for: ${title}`)
+                }
                 onAddToFavorites={onAddToFavorites}
-                data={favoritePlaces} 
+                data={favoritePlaces}
               />
             ) : (
               <Text textAlign="center" color="gray.500">

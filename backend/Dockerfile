@@ -2,8 +2,9 @@
 FROM node:20.18
 # Étape 2 : Définir le répertoire de travail
 WORKDIR /app
-# Étape 3 : Copier les fichiers package.json et package-lock.json
+# Étape 3 : Copier les fichiers package.json, package-lock.json et prisma
 COPY package*.json ./
+
 COPY prisma ./prisma
 # Étape 4 : Installer les dépendances de l'application
 RUN npm install

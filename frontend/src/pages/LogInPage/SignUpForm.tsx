@@ -20,7 +20,6 @@ const SignupForm: React.FC = () => {
   const [password, setPassword] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [profilePicture, setProfilePicture] = useState("");
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
 
@@ -30,32 +29,37 @@ const SignupForm: React.FC = () => {
     setError("");
 
     try {
-
-
-      // If the user selected a file, upload it to Cloudinary
+      let profilePicture = "";
       if (file) {
         const formData = new FormData();
-        formData.append("file", file);  // "file" is the field name for Cloudinary
-        formData.append("upload_preset", "unsigned_demo"); // Your Cloudinary upload preset
+        formData.append("file", file);
+        formData.append("upload_preset", "unsigned_demo");
 
-        const uploadRes = await axios.post("https://api.cloudinary.com/v1_1/dpqyho229/image/upload", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const uploadRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dpqyho229/image/upload",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         console.log(uploadRes);
-        setProfilePicture(uploadRes.data.secure_url)  // Cloudinary returns the URL here
+        profilePicture = uploadRes.data.secure_url;
       }
 
-      // Signup API call
+      console.log("URL PP", profilePicture);
       const response = await axios.post(`http://localhost:${PORT}/api/signup`, {
         name,
         username,
         email,
         password,
         role: "user",
-        profilePicture: profilePicture || "",  // Include the Cloudinary image URL if uploaded
+        profilePicture: profilePicture || "",
       });
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password: _ } = response.data;
 
       console.log("Réponse de l'API:", response.data);
       navigate("/profile");
@@ -115,7 +119,11 @@ const SignupForm: React.FC = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Input type="file" accept="image/*" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+          <Input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+          />
           {file && <Text>📁 {file.name}</Text>}
           <Button type="submit" colorScheme="blue" isLoading={loading}>
             Créer un compte

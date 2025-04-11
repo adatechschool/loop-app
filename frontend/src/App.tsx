@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import {
   HomePage,
   ListPage,
@@ -29,7 +29,6 @@ const App: React.FC = () => {
   };
 
   const token = localStorage.getItem("token");
-
   return (
     <Routes>
       <Route element={<MainLayout />}>

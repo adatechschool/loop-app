@@ -1,15 +1,23 @@
-import React from 'react';
-import { Box, Button, Text, VStack, Flex, Avatar, useBreakpointValue } from '@chakra-ui/react';
-import { useNavigate } from 'react-router-dom';
-import ImageCarousel from './ImageCarrousel';
-import LikeButton from './LikeButton';
+import React from "react";
+import {
+  Box,
+  Button,
+  Text,
+  VStack,
+  Flex,
+  Avatar,
+  useBreakpointValue,
+} from "@chakra-ui/react";
+import { useNavigate } from "react-router-dom";
+import ImageCarousel from "./ImageCarrousel";
+import LikeButton from "./LikeButton";
 
 interface CardProps {
   images: string[];
   title: string;
   description: string;
   userName: string;
-  userAvatar?: string;  // New prop for avatar
+  userAvatar?: string; // New prop for avatar
   onSeeMore: (title: string) => void;
   onAddToFavorites: (title: string) => void;
   isFavorite: boolean;
@@ -41,20 +49,17 @@ const Card: React.FC<CardProps> = ({
       p="4"
       onClick={handleCardClick}
       cursor="pointer"
-      _hover={{ shadow: 'md' }}
+      _hover={{ shadow: "md" }}
     >
-      {/* Display avatar and username */}
-      <Flex align="center" mt="3"  mb="6">
+      <Flex align="center" mt="3" mb="6">
         <Avatar size="sm" src={userAvatar} mr="2" />
         <Text fontWeight="bold" fontSize="lg" color="gray.600">
           {userName}
         </Text>
       </Flex>
 
-      {/* Image Carousel */}
       <ImageCarousel images={images} title={title} />
 
-      {/* Card Content */}
       <VStack p="4" align="flex-start">
         <Text fontWeight="bold" fontSize="xl" mb="2">
           {title}
@@ -62,9 +67,12 @@ const Card: React.FC<CardProps> = ({
         <Text mb="2">{description}</Text>
       </VStack>
 
-      {/* Footer Actions */}
       <Flex justifyContent="space-between" p="4" alignItems="center">
-        <LikeButton title={title} onAddToFavorites={onAddToFavorites} isFavorite={isFavorite} />
+        <LikeButton
+          title={title}
+          onAddToFavorites={onAddToFavorites}
+          isFavorite={isFavorite}
+        />
         {!isMobile && (
           <Button
             colorScheme="teal"
