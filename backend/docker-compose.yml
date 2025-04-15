@@ -3,12 +3,12 @@ services:
     build: .
     container_name: loop-backend
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://neondb_owner:npg_exafjqoO4HQ7@ep-fragrant-block-a2xzv13k-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require
       - SESSION_SECRET=aW3jk9XGzFsd7paS2kYnz4vBQKUbF6J7Eow5N4LZaAxJtH21i3bL4P8J3h9gH8g8n
-    depends_on:
+      - DROPBOX_ACCESS_TOKEN=sl.u.AFp3c3bKgBuXCFsFgxb-SrmdxRi44ShUEiXviSJQg62LgYRdEV3q3PqIuld6glqd0m8C1DnT9KOyRz4VD-E-6B7boYmfYedNY9vZdAR1sdJKy_RngJHTMZXhXYz7EeUXw18Y1XS_Wos_0aQhacEhoxvkCjLvSiJD5SZp6GZk06ZiMwq1Wc_7qxF8OjKxcr78SdHNciTQJwhpD0XCQSLDzj6bTDMYtriUptZDVCyLX_tB0ALAqK8l-_EJzgXnLgG_q8L2QY-uxvRXazX4TM1qNMi-4DG1_szOCgseMBNYsEQVYzBcofFYFDcZnABSHwmBvvZ_CnrUzbbje32snACP-s3QXIvp_23Jpqvz7gu_zOktO2wpTiFta3r70xmyj29HelrrWQNTFjiuUrK3wg9yR7V2SQSTsFgdd0bsJEcPRA5Fw3ASIWxCU-VsYjAB3ADvstGK_qyLP-x-NYduYd0tXTOJwFGlXD9x2-2qpsNra4AUnasKQbIZDP9Q9Fi0msTnZTUiBc74XNVMY8LXHzgxOn-eP-O67lTUGID_phXjP3owfLMgL25sf0SbphOL9Alej8MR-jJSjIs0nuBlwpWFAqc5fRu-rAUZoAzI5eKFoOUBsD4LuUnZ7HYJ9KZl-Ic-LV3w_U6kzJf-y-Rm2TdiFJfkXIiarF5mAeBK3COQ00tQMvhrIDAdINkECjNjjQt0_mVM_GNEiuGDYi8YiL_1M6WlT89cKOEBoFGrMwre7ZK1eDHEQRNXyfgBXVY5GJOBxEP8MY0XfWS-QLHXleQqhRYnkhWya1TNtoltf0ZnZBvGV_O870YaA0f1jZCFLSumq8Jc1oUieXK3A2JCy91zkjeKJiFriY1LY6MXZn6_WZm1CUdqMOUGOYdIYH9M69XzW9LuSJCQM8cpYM7oFUO_sCzjBnzIW_6Oqh1qciYaiv_M547TcDZvJGtgOzlbFRWSq01cnWBLc8fVhtuBRheUqdxvjN_0LyosKWug1n3vLcB-tJ-j4IKdzQIZMOwL5QiDtROMqmzO2Tl6zr-Vg5PqW60Eqhrcd3DaGgqz9qVjdIZRPCiMfNBqLVxOn17YXT0biq89A0GdwE35doKX2hf80C_uJrK-Z3vwJADm97zT-QMhfMkukbqFYYQqChpnRzWcENPoLMGRFciD8LNS3Yjlc8qvmYMSuwvJ01mnb8_KS4WNmTCcDYftNaNayuNQiZKOwV_w1HlPX33nBVqSqN8ro0fAj2akoWlF0Tu7blLqaelmR1OykDoSmf_fWBzawimf-IGybUJaNIpzc1i43iav-jWC-pKzKYIeEjsKRTBj4jOTpA
       - postgres
     volumes:
       - .:/app

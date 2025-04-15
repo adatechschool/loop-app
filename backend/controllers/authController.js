@@ -1,63 +1,98 @@
-const passport = require('passport');
-const jwt = require('jsonwebtoken');
 const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
 const bcrypt = require("bcryptjs");
+const dropbox = require("dropbox").Dropbox;
+const fs = require("fs");
+const prisma = new PrismaClient();
 
-exports.login = (req, res, next) => {
-  passport.authenticate('local', (err, user, info) => {
-    if (err) return next(err);
-    if (!user) return res.status(401).json({ message: info.message });
+const dropboxClient = new dropbox({
+  accessToken: process.env.DROPBOX_ACCESS_TOKEN,
+});
 
-    req.logIn(user, (err) => {
-      if (err) return next(err);
+exports.signup = async (req, res) => {
+  const { name, username, email, password, role = "user" } = req.body;
+  const file = req.file;
 
-      const token = jwt.sign({ id: user._id, username: user.username }, process.env.SESSION_SECRET, {
-        expiresIn: '1h'
-      });
-
-      return res.json({ message: 'Login successful', user: { id: user.id, username: user.username, token: token  } });
-    });
-  })(req, res, next);
-};
-
-exports.signup = async (req, res) => {  
-      const {
-      name,
-      username,
-      email,
-      password,
-      role = "user",
-      profilePicture,
-    } = req.body;
-  
-    try {
-      const existingUser = await prisma.user.findUnique({ where: { email } });
-      if (existingUser) {
-        return res.status(400).json({ message: "Utilisateur déjà existant !" });
-      }
-  
-      const hashedPassword = await bcrypt.hash(password, 10);
-  
-      const newUser = await prisma.user.create({
-        data: {
-          name,
-          username,
-          email,
-          password: hashedPassword,
-          role,
-          profilePicture,
-        },
-      });
-      const { password: _, ...userWithoutPassword } = newUser;
-      res
-        .status(201)
-        .json({ message: "Utilisateur créé avec succès !", user: userWithoutPassword });
-    } catch (err) {
-      console.error("Error during signup:", err);
-      res
-        .status(500)
-        .json({ message: "Erreur lors de l'inscription", error: err.message });
-    }
+  if (!file) {
+    return res
+      .status(400)
+      .json({ message: "Please upload a profile picture." });
   }
 
+  try {
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    });
+
+    if (existingUser) {
+      return res.status(400).json({ message: "User already exists!" });
+    }
+
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Upload the file to Dropbox
+    const dropboxPath = `/profile_pictures/${file.originalname}`;
+    const imageData = fs.readFileSync(file.path);
+
+    await dropboxClient.filesUpload({
+      path: dropboxPath,
+      contents: imageData,
+      mode: "overwrite",
+    });
+
+    // Create a public shared link for the file
+    let sharedLink;
+    try {
+      sharedLink = await dropboxClient.sharingCreateSharedLinkWithSettings({
+        path: dropboxPath,
+      });
+    } catch (error) {
+      if (error?.error?.error_summary?.includes("shared_link_already_exists")) {
+        const links = await dropboxClient.sharingListSharedLinks({
+          path: dropboxPath,
+          direct_only: true,
+        });
+        sharedLink = { result: { url: links.result.links[0].url } };
+      } else {
+        throw error;
+      }
+    }
+
+    // Convert to direct image URL
+    const profilePictureUrl = sharedLink.result.url.replace("?dl=0", "?raw=1");
+
+    // Create the user in the DB
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        username,
+        email,
+        password: hashedPassword,
+        role,
+        profilePicture: profilePictureUrl,
+      },
+    });
+
+    // Clean up local file
+    fs.unlinkSync(file.path);
+
+    // Auto-login after signup
+    req.login(newUser, (err) => {
+      if (err) {
+        console.error("Auto-login error:", err);
+        return res.status(500).json({
+          message: "Signup succeeded but login failed.",
+        });
+      }
+
+      return res.status(201).json({
+        message: "User created and logged in successfully!",
+        user: { ...newUser, password: undefined },
+      });
+    });
+  } catch (err) {
+    console.error("Signup error:", err);
+    if (file?.path) fs.unlinkSync(file.path);
+    res.status(500).json({ message: "Signup failed", error: err.message });
+  }
+};
