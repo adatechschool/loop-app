@@ -8,10 +8,15 @@ services:
       - NODE_ENV=development
       - DATABASE_URL=postgresql://neondb_owner:npg_exafjqoO4HQ7@ep-fragrant-block-a2xzv13k-pooler.eu-central-1.aws.neon.tech/neondb?sslmode=require
       - SESSION_SECRET=aW3jk9XGzFsd7paS2kYnz4vBQKUbF6J7Eow5N4LZaAxJtH21i3bL4P8J3h9gH8g8n
+      - CLOUDINARY_CLOUD_NAME=dpqyho229
+      - CLOUDINARY_API_KEY=443841617795831
+      - CLOUDINARY_API_SECRET=9N51vxq42CKcX1dUVIr-VRQ-bVQ
+
     depends_on:
       - postgres
     volumes:
       - .:/app
+      - /app/node_modules
     networks:
       - app-network
 
