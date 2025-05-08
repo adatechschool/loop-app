@@ -59,6 +59,7 @@ model Place {
   id            String       @id @default(uuid())
   name          String
   address       String
+  description   String?
   accessibility String?
   author        String
   geo           Geo          @relation(fields: [geoId], references: [id])
