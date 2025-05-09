@@ -44,25 +44,21 @@ const SignupForm: React.FC = () => {
             },
           }
         );
-        console.log(uploadRes);
         profilePicture = uploadRes.data.secure_url;
       }
-
-      console.log("URL PP", profilePicture);
       const response = await axios.post(`http://localhost:${PORT}/api/signup`, {
         name,
         username,
         email,
         password,
         role: "user",
-        profilePicture: profilePicture || "",
+        profilePicture: profilePicture || "", // Include the Cloudinary image URL if uploaded
       });
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _ } = response.data;
 
-      console.log("Réponse de l'API:", response.data);
-      navigate("/profile");
+      navigate("/");
     } catch (err: any) {
       console.error("Signup error:", err);
       if (err.response) {

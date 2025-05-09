@@ -10,6 +10,7 @@ const BASE_PATH = "/api";
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const uploadRoute = require("./routes/uploadRoutes");
+const placeRoutes = require("./routes/placeRoutes");
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -31,6 +32,7 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 app.use(BASE_PATH, authRoutes);
 app.use(BASE_PATH, userRoutes);
 app.use(BASE_PATH, uploadRoute);
+app.use(BASE_PATH, placeRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);
