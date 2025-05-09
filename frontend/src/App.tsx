@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import {
   HomePage,
   ListPage,
@@ -32,7 +32,17 @@ const App: React.FC = () => {
   return (
     <Routes>
       <Route element={<MainLayout />}>
-        <Route path="/" element={<HomePage />} />
+        <Route
+          path="/"
+          element={
+            localStorage.getItem("authToken") ? (
+              <HomePage />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
+        />
+
         <Route
           path="/list"
           element={
