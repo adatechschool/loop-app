@@ -1,45 +1,45 @@
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
 generator client {
   provider      = "prisma-client-js"
   binaryTargets = ["native", "debian-openssl-3.0.x"]
 }
 
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
 model PlaceUser {
   id           String   @id @default(uuid())
   creationDate DateTime @default(now())
-  user         User     @relation(fields: [userId], references: [id])
   userId       String
-  place        Place    @relation(fields: [placeId], references: [id])
   placeId      String
+  place        Place    @relation(fields: [placeId], references: [id])
+  user         User     @relation(fields: [userId], references: [id])
 }
 
 model PlaceType {
   id      String @id @default(uuid())
-  place   Place  @relation(fields: [placeId], references: [id])
   placeId String
-  type    Type   @relation(fields: [typeId], references: [id])
   typeId  String
+  place   Place  @relation(fields: [placeId], references: [id])
+  type    Type   @relation(fields: [typeId], references: [id])
 }
 
 model PlaceImage {
   id      String @id @default(uuid())
-  place   Place  @relation(fields: [placeId], references: [id])
   placeId String
-  image   Image  @relation(fields: [imageId], references: [id])
   imageId String
+  image   Image  @relation(fields: [imageId], references: [id])
+  place   Place  @relation(fields: [placeId], references: [id])
 }
 
 model ImageUser {
   id         String   @id @default(uuid())
   uploadDate DateTime @default(now())
-  user       User     @relation(fields: [userId], references: [id])
   userId     String
-  image      Image    @relation(fields: [imageId], references: [id])
   imageId    String
+  image      Image    @relation(fields: [imageId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
 }
 
 model User {
@@ -50,23 +50,24 @@ model User {
   password       String
   role           String
   profilePicture String?
-  places         PlaceUser[]
   favorites      Favorite[]
   images         ImageUser[]
+  places         PlaceUser[]
 }
 
 model Place {
   id            String       @id @default(uuid())
   name          String
   address       String
-  accessibility String?
   author        String
-  geo           Geo          @relation(fields: [geoId], references: [id])
   geoId         String
-  types         PlaceType[]
-  images        PlaceImage[]
-  users         PlaceUser[]
+  accessibility Boolean?
+  description   String?
   favorites     Favorite[]
+  geo           Geo          @relation(fields: [geoId], references: [id])
+  images        PlaceImage[]
+  types         PlaceType[]
+  users         PlaceUser[]
 }
 
 model Geo {
@@ -85,16 +86,16 @@ model Type {
 model Favorite {
   id        String   @id @default(uuid())
   addedDate DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
   userId    String
-  place     Place    @relation(fields: [placeId], references: [id])
   placeId   String
+  place     Place    @relation(fields: [placeId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Image {
   id      String       @id @default(uuid())
   url     String
   caption String?
-  places  PlaceImage[]
   users   ImageUser[]
+  places  PlaceImage[]
 }

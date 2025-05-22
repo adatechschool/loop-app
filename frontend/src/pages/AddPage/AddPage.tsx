@@ -9,7 +9,7 @@ const AddPage = () => {
       <Flex justify={"center"}>
         <Box minH={"100vh"} maxW={"md"}>
           <Heading textAlign={"center"}>Ajouter un lieu</Heading>
-          <FormAddList />;
+          <FormAddList />
         </Box>
       </Flex>
       <Box minH={54} />
