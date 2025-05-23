@@ -12,6 +12,7 @@ import {
   Button,
   Select,
   Text,
+  CircularProgress,
 } from "@chakra-ui/react";
 import { FaAccessibleIcon } from "react-icons/fa";
 import { FaLocationCrosshairs } from "react-icons/fa6";
@@ -20,10 +21,9 @@ import PORT from "src/utils/constant";
 
 const FormAddList = () => {
   const [location, setLocation] = useState({ lat: 0, lng: 0 });
-  const [errorMessage, setErrorMessage] = useState("");
+  const [error, setError] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string>("");
   const [accessibility, setAccessibility] = useState(false);
   const [placeFieldsValues, setPlaceFieldsValues] = useState({
     name: "",
@@ -33,10 +33,8 @@ const FormAddList = () => {
     accessibility,
     images: [] as string[],
   });
+  const token = localStorage.getItem("token");
 
-  // const getLocation = () => {
-  //   return setLocation("48.849726, 2.319596");
-  // };
   const navigate = useNavigate();
 
   const handleUploadCloudinary = async (file: File) => {
@@ -71,12 +69,12 @@ const FormAddList = () => {
             { url: imageUrl },
             {
               headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                Authorization: `Bearer ${token}`,
               },
             }
           );
 
-          const imageId = response.data.imageId;
+          const imageId = response.data.image_id;
           setPlaceFieldsValues((prev) => ({
             ...prev,
             images: [imageId] as string[],
@@ -112,15 +110,6 @@ const FormAddList = () => {
         geo: location,
       }));
 
-      // console.log({
-      //   name,
-      //   address,
-      //   description,
-      //   accessibility,
-      //   types,
-      //   geo: location,
-      // });
-
       const payload = {
         name,
         address,
@@ -129,29 +118,32 @@ const FormAddList = () => {
         geo: location,
         types: placeFieldsValues.types.length
           ? placeFieldsValues.types
-          : ["type-id-1"],
+          : ["park_id"],
         images: placeFieldsValues.images.length
           ? placeFieldsValues.images
           : [""],
       };
 
       try {
-        const response = await axios.post(
-          `http://localhost:${PORT}/api/places`,
-          payload,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
-
-        const { user } = response.data;
-        localStorage.setItem("token", user.token);
+        await axios.post(`http://localhost:${PORT}/api/places`, payload, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setLoading(true);
         navigate("/list");
-      } catch (error) {
-        setErrorMessage("Mot de passe ou nom d'utilisateur invalide");
-        console.error("Error :", (error as Error).message);
+      } catch (error: any) {
+        if (
+          error.response &&
+          error.response.data &&
+          (error.response.data.message === "Invalid token" ||
+            error.response.data.message === "jwt expired")
+        ) {
+          setError("Votre session a expiré. Veuillez vous reconnecter.");
+          localStorage.removeItem("token");
+          navigate("/login");
+        }
+        console.error("Error :", error.message);
       }
     } catch (err: any) {
       console.error("Erreur de l'ajout:", err);
@@ -165,102 +157,112 @@ const FormAddList = () => {
     }
   };
 
-  console.log("accessibility", accessibility);
-  console.log("placeFieldsValues", placeFieldsValues);
   return (
     <Flex minH={"100vh"} align={"center"} justify={"center"} bg={"white"}>
-      <form onSubmit={handleSubmit}>
-        <Stack
-          spacing={6}
-          p={6}
-          bg={"white"}
-          w={"full"}
-          maxW={"md"}
-          rounded={"xl"}
-        >
-          <FormControl id="imagePlace" isRequired>
-            <FormLabel>Photo</FormLabel>
-            <Input
-              type="file"
-              accept="image/*"
-              onChange={(e) => {
-                const selectedFile = e.target.files?.[0] || null;
-                setFile(selectedFile);
-                if (selectedFile) {
-                  handleFileupload(selectedFile);
-                }
-              }}
-              name="imagePlace"
-              placeholder="Télécharge une image"
-            />
-            {file && <Text>📁 {file.name}</Text>}
-          </FormControl>
+      {loading ? (
+        <CircularProgress isIndeterminate color="green.300" />
+      ) : (
+        <form onSubmit={handleSubmit}>
+          <Stack
+            spacing={6}
+            p={6}
+            bg={"white"}
+            w={"full"}
+            maxW={"md"}
+            rounded={"xl"}
+          >
+            {error && (
+              <Text color="red.500" mb={2}>
+                {error}
+              </Text>
+            )}
 
-          <FormControl id="namePlace" isRequired>
-            <FormLabel>Nom</FormLabel>
-            <Input placeholder="Nom" type="text" name="namePlace" />
-          </FormControl>
-
-          <FormControl id="addressPlace" isRequired>
-            <FormLabel>Adresse</FormLabel>
-            <Input placeholder="Adresse" type="text" name="addressPlace" />
-          </FormControl>
-
-          <FormControl id="descriptionPlace">
-            <FormLabel>Description</FormLabel>
-            <Textarea
-              h="4rem"
-              placeholder="Décris-nous ta dernière découverte !"
-              name="descriptionPlace"
-            />
-          </FormControl>
-
-          <FormControl id="typePlace">
-            <FormLabel>Catégorie</FormLabel>
-            <Select
-              placeholder="Choisis une catégorie"
-              size="lg"
-              name="typePlace"
-            >
-              <option value="Parc">Parc</option>
-              <option value="Street art">Street art</option>
-              <option value="Rue piétonne">Rue piétonne</option>
-              <option value="Monument">Monument</option>
-              <option value="Architecture">Architecture</option>
-            </Select>
-          </FormControl>
-
-          <Flex>
-            <FormControl>
-              <FormLabel htmlFor="accessibilityPlace">Accessibilité</FormLabel>
-              <Stack spacing={6} direction={["row"]}>
-                <FaAccessibleIcon size="30px" />
-                <Switch
-                  id="accessibilityPlace"
-                  name="accessibilityPlace"
-                  size="lg"
-                  isChecked={accessibility}
-                  onChange={(e) => setAccessibility(e.target.checked)}
-                />
-              </Stack>
+            <FormControl id="imagePlace" isRequired>
+              <FormLabel>Photo</FormLabel>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const selectedFile = e.target.files?.[0] || null;
+                  setFile(selectedFile);
+                  if (selectedFile) {
+                    handleFileupload(selectedFile);
+                  }
+                }}
+                name="imagePlace"
+                placeholder="Télécharge une image"
+              />
+              {file && <Text>📁 {file.name}</Text>}
             </FormControl>
 
-            <FormControl>
-              <FormLabel>Localisation</FormLabel>
-              <Stack spacing={6} direction={["row"]}>
-                <FaLocationCrosshairs size="30px" />
-                <Button type="button">
-                  {location.lat}, {location.lng}
-                </Button>
-              </Stack>
+            <FormControl id="namePlace" isRequired>
+              <FormLabel>Nom</FormLabel>
+              <Input placeholder="Nom" type="text" name="namePlace" />
             </FormControl>
-          </Flex>
 
-          <Button mt={4} w={"full"} colorScheme="teal" type="submit">
-            Ajouter
-          </Button>
-        </Stack>
-      </form>
+            <FormControl id="addressPlace" isRequired>
+              <FormLabel>Adresse</FormLabel>
+              <Input placeholder="Adresse" type="text" name="addressPlace" />
+            </FormControl>
+
+            <FormControl id="descriptionPlace">
+              <FormLabel>Description</FormLabel>
+              <Textarea
+                h="4rem"
+                placeholder="Décris-nous ta dernière découverte !"
+                name="descriptionPlace"
+              />
+            </FormControl>
+
+            <FormControl id="typePlace">
+              <FormLabel>Catégorie</FormLabel>
+              <Select
+                placeholder="Choisis une catégorie"
+                size="lg"
+                name="typePlace"
+              >
+                <option value="park_id">Parc</option>
+                <option value="street_id">Street art</option>
+                <option value="pedestrian_id">Rue piétonne</option>
+                <option value="monument_id">Monument</option>
+                <option value="architecture_id">Architecture</option>
+              </Select>
+            </FormControl>
+
+            <Flex>
+              <FormControl>
+                <FormLabel htmlFor="accessibilityPlace">
+                  Accessibilité
+                </FormLabel>
+                <Stack spacing={6} direction={["row"]}>
+                  <FaAccessibleIcon size="30px" />
+                  <Switch
+                    id="accessibilityPlace"
+                    name="accessibilityPlace"
+                    size="lg"
+                    isChecked={accessibility}
+                    onChange={(e) => setAccessibility(e.target.checked)}
+                  />
+                </Stack>
+              </FormControl>
+
+              <FormControl>
+                <FormLabel>Localisation</FormLabel>
+                <Stack spacing={6} direction={["row"]}>
+                  <FaLocationCrosshairs size="30px" />
+                  <Button type="button">
+                    {location.lat}, {location.lng}
+                  </Button>
+                </Stack>
+              </FormControl>
+            </Flex>
+
+            <Button mt={4} w={"full"} colorScheme="teal" type="submit">
+              Ajouter
+            </Button>
+          </Stack>
+        </form>
+      )}
     </Flex>
   );
 };

@@ -8,21 +8,6 @@ exports.createPlace = async (req, res) => {
     const userId = req.user.id;
     const author = req.user.username;
 
-    const imageRecords = await prisma.image.createMany({
-      data: [
-        { id: 'image-id-1', url: 'https://example.com/image1.jpg' },
-        { id: 'image-id-2', url: 'https://example.com/image2.jpg' },
-      ],
-      skipDuplicates: true, 
-    });
-    const typeRecords = await prisma.type.createMany({
-      data: [
-        { id: 'type-id-1', name: 'Parc' },
-        { id: 'type-id-2', name: 'Lieu public' },
-      ],
-      skipDuplicates: true, 
-    });
-
     const geoData = await prisma.geo.create({
       data: {
         lat: geo.lat,

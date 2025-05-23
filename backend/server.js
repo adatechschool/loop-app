@@ -11,6 +11,7 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const uploadRoute = require("./routes/uploadRoutes");
 const placeRoutes = require("./routes/placeRoutes");
+const imageRoutes = require("./routes/imageRoutes");
 const PORT = process.env.PORT || 5000;
 
 app.use(express.json());
@@ -33,6 +34,7 @@ app.use(BASE_PATH, authRoutes);
 app.use(BASE_PATH, userRoutes);
 app.use(BASE_PATH, uploadRoute);
 app.use(BASE_PATH, placeRoutes);
+app.use(BASE_PATH, imageRoutes)
 
 app.listen(PORT, () => {
   console.log(`Server is listening on port ${PORT}`);

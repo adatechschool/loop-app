@@ -2,7 +2,7 @@ const express = require("express");
 const app = express();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
-import { createImageService } from "../services/image.service";
+const { createImageService } = require("../services/image.service");
 
 exports.createImage = async (req, res) => {
   try {
