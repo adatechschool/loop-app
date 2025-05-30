@@ -35,7 +35,7 @@ const App: React.FC = () => {
         <Route
           path="/"
           element={
-            localStorage.getItem("authToken") ? (
+            localStorage.getItem("token") ? (
               <HomePage />
             ) : (
               <Navigate to="/login" replace />
