@@ -18,9 +18,10 @@ import { FaAccessibleIcon } from "react-icons/fa";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import PORT from "src/utils/constant";
+import { useGeolocationContext } from "src/providers/GeolocationContext";
 
 const FormAddList = () => {
-  const [location, setLocation] = useState({ lat: 0, lng: 0 });
+  const { location: currentLocation } = useGeolocationContext();
   const [error, setError] = useState<string>("");
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -100,25 +101,17 @@ const FormAddList = () => {
       const address = formData.get("addressPlace");
       const description = formData.get("descriptionPlace");
       const types = formData.get("typePlace");
-      setPlaceFieldsValues((prev) => ({
-        ...prev,
-        name: name as string,
-        address: address as string,
-        description: description as string,
-        types: [types as string],
-        accessibility,
-        geo: location,
-      }));
 
       const payload = {
         name,
         address,
         description,
         accessibility,
-        geo: location,
-        types: placeFieldsValues.types.length
-          ? placeFieldsValues.types
-          : ["park_id"],
+        geo: {
+          lat: currentLocation?.coords.latitude,
+          lng: currentLocation?.coords.longitude,
+        },
+        types: types ? [types as string] : [],
         images: placeFieldsValues.images.length
           ? placeFieldsValues.images
           : [""],
@@ -220,6 +213,12 @@ const FormAddList = () => {
                 placeholder="Choisis une catégorie"
                 size="lg"
                 name="typePlace"
+                onChange={(e) => {
+                  setPlaceFieldsValues((prev) => ({
+                    ...prev,
+                    types: [e.target.value],
+                  }));
+                }}
               >
                 <option value="park_id">Parc</option>
                 <option value="street_id">Street art</option>
@@ -251,7 +250,8 @@ const FormAddList = () => {
                 <Stack spacing={6} direction={["row"]}>
                   <FaLocationCrosshairs size="30px" />
                   <Button type="button">
-                    {location.lat}, {location.lng}
+                    {currentLocation?.coords.latitude},
+                    {currentLocation?.coords.longitude}
                   </Button>
                 </Stack>
               </FormControl>

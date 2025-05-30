@@ -16,6 +16,7 @@ import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import PrivateRoute from "./routes/PrivateRoute";
 import LoginPage from "./pages/LogInPage/LogIn";
+import { GeolocationProvider } from "./providers/GeolocationContext";
 
 const App: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
@@ -30,81 +31,83 @@ const App: React.FC = () => {
 
   const token = localStorage.getItem("token");
   return (
-    <Routes>
-      <Route element={<MainLayout />}>
-        <Route
-          path="/"
-          element={
-            localStorage.getItem("token") ? (
-              <HomePage />
-            ) : (
-              <Navigate to="/login" replace />
-            )
-          }
-        />
+    <GeolocationProvider>
+      <Routes>
+        <Route element={<MainLayout />}>
+          <Route
+            path="/"
+            element={
+              localStorage.getItem("token") ? (
+                <HomePage />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            }
+          />
 
-        <Route
-          path="/list"
-          element={
-            <ListPage
-              favorites={favorites}
-              onAddToFavorites={handleAddToFavorites}
-            />
-          }
-        />
-        <Route
-          path="/add"
-          element={
-            token ? (
-              <PrivateRoute>
-                <AddPage />
-              </PrivateRoute>
-            ) : (
-              <LoginPage />
-            )
-          }
-        />
-        <Route
-          path="/search"
-          element={
-            <SearchPage
-              favorites={favorites}
-              onAddToFavorites={handleAddToFavorites}
-            />
-          }
-        />
-        <Route
-          path="/profile"
-          element={
-            token ? (
-              <PrivateRoute>
-                <ProfilePage
-                  favorites={favorites}
-                  onAddToFavorites={handleAddToFavorites}
-                />
-              </PrivateRoute>
-            ) : (
-              <LoginPage />
-            )
-          }
-        />
-        <Route
-          path="/detail/:name"
-          element={
-            <DetailPage
-              data={mockPlaces}
-              favorites={favorites}
-              onAddToFavorites={handleAddToFavorites}
-            />
-          }
-        />
-      </Route>
-      <Route element={<AuthLayout />}>
-        <Route path="/login" element={<LogIn />} />
-        <Route path="/login-form" element={<LogInForm />} />
-        <Route path="/signup-form" element={<SignUpForm />} />
-      </Route>
-    </Routes>
+          <Route
+            path="/list"
+            element={
+              <ListPage
+                favorites={favorites}
+                onAddToFavorites={handleAddToFavorites}
+              />
+            }
+          />
+          <Route
+            path="/add"
+            element={
+              token ? (
+                <PrivateRoute>
+                  <AddPage />
+                </PrivateRoute>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/search"
+            element={
+              <SearchPage
+                favorites={favorites}
+                onAddToFavorites={handleAddToFavorites}
+              />
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              token ? (
+                <PrivateRoute>
+                  <ProfilePage
+                    favorites={favorites}
+                    onAddToFavorites={handleAddToFavorites}
+                  />
+                </PrivateRoute>
+              ) : (
+                <LoginPage />
+              )
+            }
+          />
+          <Route
+            path="/detail/:name"
+            element={
+              <DetailPage
+                data={mockPlaces}
+                favorites={favorites}
+                onAddToFavorites={handleAddToFavorites}
+              />
+            }
+          />
+        </Route>
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/login-form" element={<LogInForm />} />
+          <Route path="/signup-form" element={<SignUpForm />} />
+        </Route>
+      </Routes>
+    </GeolocationProvider>
   );
 };
 
