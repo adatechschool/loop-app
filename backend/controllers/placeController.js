@@ -1,27 +1,13 @@
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 
 exports.createPlace = async (req, res) => {
-  const { name, address, description, accessibility, geo, types, images } = req.body;
+  const { name, address, description, accessibility, geo, types, images } =
+    req.body;
 
   try {
     const userId = req.user.id;
     const author = req.user.username;
-
-    const imageRecords = await prisma.image.createMany({
-      data: [
-        { id: 'image-id-1', url: 'https://example.com/image1.jpg' },
-        { id: 'image-id-2', url: 'https://example.com/image2.jpg' },
-      ],
-      skipDuplicates: true, 
-    });
-    const typeRecords = await prisma.type.createMany({
-      data: [
-        { id: 'type-id-1', name: 'Parc' },
-        { id: 'type-id-2', name: 'Lieu public' },
-      ],
-      skipDuplicates: true, 
-    });
 
     const geoData = await prisma.geo.create({
       data: {
@@ -38,10 +24,10 @@ exports.createPlace = async (req, res) => {
       author,
       geoId: String(geoData.id),
       types: {
-        connect: types.map(id => ({ id })), // example: [{ id: 1 }, { id: 2 }]
+        connect: types.map((id) => ({ id })), // example: [{ id: 1 }, { id: 2 }]
       },
       images: {
-        connect: images.map(id => ({ id })), // same here
+        connect: images.map((id) => ({ id })), // same here
       },
       users: {
         create: {
@@ -58,15 +44,15 @@ exports.createPlace = async (req, res) => {
         author,
         geoId: String(geoData.id),
         types: {
-          create: types.map(typeId => ({
-            type: { connect: { id: typeId } }
+          create: types.map((typeId) => ({
+            type: { connect: { id: typeId } },
           })),
         },
-    
+
         // Create or connect join records for PlaceImage
         images: {
-          create: images.map(imageId => ({
-            image: { connect: { id: imageId } }
+          create: images.map((imageId) => ({
+            image: { connect: { id: imageId } },
           })),
         },
         users: {
@@ -75,12 +61,18 @@ exports.createPlace = async (req, res) => {
           },
         },
       },
+      include: {
+        types: true,
+      },
     });
 
-
+    const formattedPlace = {
+      ...newPlace,
+      types: newPlace.types.map((type) => type.typeId),
+    };
     res
       .status(201)
-      .json({ message: "Place created successfully", place: newPlace });
+      .json({ message: "Place created successfully", place: formattedPlace });
   } catch (error) {
     console.error("Error creating place:", error);
     res

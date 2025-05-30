@@ -1,45 +1,38 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
-import "./style.css";
 import L from "leaflet";
+import { useGeolocationContext } from "./../../providers/GeolocationContext";
+import "./style.css";
 
 const Map = () => {
   const map = useMap();
+  const { location, error } = useGeolocationContext();
 
-  navigator.geolocation.watchPosition(success, error);
-  let circle: L.Circle;
-  let marker: L.Marker;
+  const markerRef = useRef<L.Marker>();
+  const circleRef = useRef<L.Circle>();
 
-  interface PositionType {
-    coords: {
-      latitude: number;
-      longitude: number;
-      accuracy: number;
-    };
-  }
+  useEffect(() => {
+    if (location) {
+      const lat = location.coords.latitude;
+      const lng = location.coords.longitude;
+      const accuracy = location.coords.accuracy;
 
-  function success(position: PositionType) {
-    const lat = position.coords.latitude;
-    const lng = position.coords.longitude;
-    const accuracy = position.coords.accuracy;
+      if (markerRef.current) map.removeLayer(markerRef.current);
+      if (circleRef.current) map.removeLayer(circleRef.current);
 
-    if (marker) {
-      map.removeLayer(marker);
-      map.removeLayer(circle);
+      circleRef.current = new L.Circle([lat, lng], { radius: accuracy }).addTo(
+        map
+      );
+      markerRef.current = L.marker([lat, lng]).addTo(map);
+
+      map.fitBounds(circleRef.current.getBounds());
     }
-    circle = new L.Circle([lat, lng], { radius: accuracy }).addTo(map);
-    marker = L.marker([lat, lng]).addTo(map);
+  }, [location, map]);
 
-    map.fitBounds(circle.getBounds());
+  if (error) {
+    console.error(`Geolocation error (${error.code}): ${error.message}`);
+  }
 
-    console.log(position.coords);
-  }
-  function error(error: GeolocationPositionError) {
-    if (error.code === 1) {
-      alert("Please enable your geolocation access");
-    }
-    console.log(console.error(`ERROR(${error.code}): ${error.message}`));
-  }
   return null;
 };
 
