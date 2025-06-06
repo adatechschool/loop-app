@@ -1,6 +1,13 @@
 import React, { useState } from "react";
-import { Routes, Route, } from "react-router-dom";
-import { HomePage, ListPage, AddPage, SearchPage, ProfilePage, DetailPage } from "./pages";
+import { Routes, Route } from "react-router-dom";
+import {
+  HomePage,
+  ListPage,
+  AddPage,
+  SearchPage,
+  ProfilePage,
+  DetailPage,
+} from "./pages";
 import LogIn from "./pages/LogInPage/LogIn";
 import LoginForm from "./pages/LogInPage/LogInForm";
 import SignUpForm from "./pages/LogInPage/SignUpForm";
@@ -14,14 +21,6 @@ import { AuthProvider } from "src/contexts/AuthContext";
 import { mockPlaces } from "./utils/mock";
 
 const App: React.FC = () => {
-  const [favorites, setFavorites] = useState<string[]>([]);
-
-  const handleAddToFavorites = (name: string) => {
-    setFavorites((prev) =>
-      prev.includes(name) ? prev.filter((fav) => fav !== name) : [...prev, name]
-    );
-  };
-
   return (
     <AuthProvider>
       <GeolocationProvider>
@@ -35,12 +34,7 @@ const App: React.FC = () => {
                 </PrivateRoute>
               }
             />
-            <Route
-              path="/list"
-              element={
-                <ListPage favorites={favorites} onAddToFavorites={handleAddToFavorites} />
-              }
-            />
+            <Route path="/places" element={<ListPage />} />
             <Route
               path="/add"
               element={
@@ -49,26 +43,16 @@ const App: React.FC = () => {
                 </PrivateRoute>
               }
             />
-            <Route
-              path="/search"
-              element={
-                <SearchPage favorites={favorites} onAddToFavorites={handleAddToFavorites} />
-              }
-            />
+            <Route path="/search" element={<SearchPage />} />
             <Route
               path="/profile"
               element={
                 <PrivateRoute>
-                  <ProfilePage favorites={favorites} onAddToFavorites={handleAddToFavorites} />
+                  <ProfilePage />
                 </PrivateRoute>
               }
             />
-            <Route
-              path="/detail/:name"
-              element={
-                <DetailPage data={mockPlaces} favorites={favorites} onAddToFavorites={handleAddToFavorites} />
-              }
-            />
+            <Route path="/places/:id" element={<DetailPage />} />
           </Route>
 
           <Route
@@ -106,7 +90,6 @@ const App: React.FC = () => {
               }
             />
           </Route>
-
         </Routes>
       </GeolocationProvider>
     </AuthProvider>

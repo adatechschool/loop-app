@@ -3,9 +3,9 @@ import { IconButton, useToast } from "@chakra-ui/react";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 
 interface LikeButtonProps {
-  title: string;
-  onAddToFavorites: (name: string) => void;
-  isFavorite: boolean;
+  title: string | undefined;
+  onAddToFavorites?: (name: string) => void;
+  isFavorite?: boolean;
 }
 
 const LikeButton: React.FC<LikeButtonProps> = ({
@@ -25,7 +25,6 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     e.stopPropagation();
     setFavorite((prev) => {
       const newFavoriteStatus = !prev;
-      onAddToFavorites(title);
       toast({
         title: newFavoriteStatus
           ? "Added to Favorites"
@@ -34,7 +33,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
           newFavoriteStatus ? "added to" : "removed from"
         } your favorites.`,
         status: newFavoriteStatus ? "success" : "info",
-        duration: 3000,
+        duration: 1500,
         isClosable: true,
       });
 

@@ -16,25 +16,6 @@ exports.createPlace = async (req, res) => {
       },
     });
 
-    console.log({
-      name,
-      address,
-      description: description || null,
-      accessibility,
-      author,
-      geoId: String(geoData.id),
-      types: {
-        connect: types.map((id) => ({ id })), // example: [{ id: 1 }, { id: 2 }]
-      },
-      images: {
-        connect: images.map((id) => ({ id })), // same here
-      },
-      users: {
-        create: {
-          user: { connect: { id: userId } },
-        },
-      },
-    });
     const newPlace = await prisma.place.create({
       data: {
         name,
@@ -48,8 +29,6 @@ exports.createPlace = async (req, res) => {
             type: { connect: { id: typeId } },
           })),
         },
-
-        // Create or connect join records for PlaceImage
         images: {
           create: images.map((imageId) => ({
             image: { connect: { id: imageId } },
@@ -80,3 +59,57 @@ exports.createPlace = async (req, res) => {
       .json({ message: "Error creating place", error: error.message });
   }
 };
+
+exports.getAllPlaces = async (req, res) => {
+  try {
+    const usersPlaces = await prisma.place.findMany({
+      include: {
+        types: true,
+        images: { include: { image: true } },
+        geo: true,
+      },
+    })
+
+    res.status(200).json({
+      success: true,
+      message: "All places fetched successfully",
+      places: usersPlaces,
+    });
+  } catch (error) {
+    console.error("Error fetching places:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching places",
+    });
+  }
+};
+
+exports.getPlaceById = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const place = await prisma.place.findUnique({
+      where: { id: id },
+      include: {
+        types: true,
+        images: { include: { image: true } },
+        geo: true,
+      },
+    });
+
+    if (!place) {
+      return res.status(404).json({ message: "Place not found" });
+    }
+
+    res.status(200).json({
+      message: "Place fetched successfully",
+      place,
+    });
+  } catch (error) {
+    console.error("Error fetching place:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching place",
+    });
+  }
+};
+
