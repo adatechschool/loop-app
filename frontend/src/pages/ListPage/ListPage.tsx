@@ -1,28 +1,34 @@
 import React from "react";
-import { Heading, SimpleGrid } from "@chakra-ui/react";
-import { ListCards } from "src/components";  // Assuming ListCards is imported correctly
+import {
+  Center,
+  Heading,
+  SimpleGrid,
+  Text,
+  Stack,
+  Skeleton,
+} from "@chakra-ui/react";
+import { ListCards } from "src/components";
+import useQueryPlaces from "src/hooks/useQueryPlaces";
 
-interface ListPageProps {
-  favorites: string[];  // List of favorite places passed down as a prop
-  onAddToFavorites: (name: string) => void;  // Function to add or remove from favorites
-}
+const ListPage = () => {
+  const {
+    places: fetchedPlaces,
+    loading: loadingPlaces,
+    error,
+  } = useQueryPlaces();
 
-const ListPage: React.FC<ListPageProps> = ({ favorites, onAddToFavorites }) => {
-  // Function to handle the "See More" click for each place card
-  const handleSeeMoreClick = (itemName: string) => {
-    console.log(`See more details of ${itemName}`);
-  };
+  const reverseOrderedPlaces = [...fetchedPlaces].reverse();
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="15px" p="4">
       <Heading>Lieux à proximité</Heading>
-
-      {/* Pass the favorites and onAddToFavorites to ListCards */}
-      <ListCards
-        favorites={favorites}  // Array of favorite places
-        onSeeMore={handleSeeMoreClick}  // Function to handle See More
-        onAddToFavorites={onAddToFavorites}  // Function to add/remove from favorites
-      />
+      {reverseOrderedPlaces ? (
+        <ListCards places={reverseOrderedPlaces} loading={loadingPlaces} />
+      ) : (
+        <Center>
+          <Text>Aucun lieux disponibles</Text>
+        </Center>
+      )}
     </SimpleGrid>
   );
 };

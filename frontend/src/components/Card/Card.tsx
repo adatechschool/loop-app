@@ -12,33 +12,28 @@ import { useNavigate } from "react-router-dom";
 import ImageCarousel from "./ImageCarrousel";
 import LikeButton from "./LikeButton";
 
-interface CardProps {
+export interface CardProps {
   images: string[];
-  title: string;
-  description: string;
-  userName: string;
+  title: string | undefined;
+  description: string | undefined;
+  username: string | undefined;
   userAvatar?: string; // New prop for avatar
-  onSeeMore: (title: string) => void;
-  onAddToFavorites: (title: string) => void;
-  isFavorite: boolean;
+  onSeeMore?: (title: string) => void;
+  onAddToFavorites?: (title: string) => void;
+  isFavorite?: boolean;
+  onClick?: () => void;
 }
 
 const Card: React.FC<CardProps> = ({
   images,
   title,
   description,
-  userName,
-  userAvatar, // Receive avatar prop
-  onSeeMore,
-  onAddToFavorites,
-  isFavorite,
+  username,
+  userAvatar,
+  onClick,
 }) => {
   const navigate = useNavigate();
   const isMobile = useBreakpointValue({ base: true, md: false });
-
-  const handleCardClick = () => {
-    navigate(`/detail/${title}`);
-  };
 
   return (
     <Box
@@ -47,14 +42,14 @@ const Card: React.FC<CardProps> = ({
       borderRadius="md"
       overflow="hidden"
       p="4"
-      onClick={handleCardClick}
-      cursor="pointer"
+      onClick={onClick}
+      cursor={onClick ? "pointer" : undefined}
       _hover={{ shadow: "md" }}
     >
       <Flex align="center" mt="3" mb="6">
-        <Avatar size="sm" src={userAvatar} mr="2" />
+        <Avatar size="sm" mr="2" src={userAvatar} />
         <Text fontWeight="bold" fontSize="lg" color="gray.600">
-          {userName}
+          {username}
         </Text>
       </Flex>
 
@@ -68,17 +63,12 @@ const Card: React.FC<CardProps> = ({
       </VStack>
 
       <Flex justifyContent="space-between" p="4" alignItems="center">
-        <LikeButton
-          title={title}
-          onAddToFavorites={onAddToFavorites}
-          isFavorite={isFavorite}
-        />
+        <LikeButton title={title} />
         {!isMobile && (
           <Button
             colorScheme="teal"
             onClick={(e) => {
               e.stopPropagation();
-              onSeeMore(title);
             }}
           >
             See More

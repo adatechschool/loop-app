@@ -124,7 +124,7 @@ const FormAddList = () => {
           },
         });
         setLoading(true);
-        navigate("/list");
+        navigate("/places");
       } catch (error: any) {
         if (
           error.response &&

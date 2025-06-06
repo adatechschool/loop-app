@@ -57,14 +57,14 @@ const Navbar: React.FC = () => {
             onClick={handleIconClick}
           />
         </Link>
-        <Link to="/list">
+        <Link to="/places">
           {" "}
           <IconButton
             icon={<BiDirections />}
             aria-label="List"
             variant="ghost"
             fontSize="25px"
-            color={isActive("/list") ? activeColor : theme.colors.icon}
+            color={isActive("/places") ? activeColor : theme.colors.icon}
             _hover={{ bg: theme.colors.hover }}
             onClick={handleIconClick}
           />

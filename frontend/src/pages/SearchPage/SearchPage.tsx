@@ -1,24 +1,23 @@
 import React from "react";
 import {
+  Center,
   Container,
   Input,
   InputGroup,
   InputRightElement,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { IoSearch } from "react-icons/io5";
 import ListCards from "src/components/ListCards/ListCards";
+import useQueryPlaces from "src/hooks/useQueryPlaces";
 
-interface SearchPageProps {
-  favorites: string[];
-  onAddToFavorites: (title: string) => void;
-}
-
-const SearchPage: React.FC<SearchPageProps> = ({ favorites, onAddToFavorites }) => {
-  const handleSeeMoreClick = (title: string) => {
-    console.log(`Navigating to details for: ${title}`);
-    
-  };
+const SearchPage = () => {
+  const {
+    places: fetchedPlaces,
+    loading: loadingPlaces,
+    error,
+  } = useQueryPlaces();
 
   return (
     <Container p={0} minH={"100vh"}>
@@ -37,11 +36,13 @@ const SearchPage: React.FC<SearchPageProps> = ({ favorites, onAddToFavorites }) 
             borderRadius="16px"
           />
         </InputGroup>
-        <ListCards
-          favorites={favorites}  
-          onSeeMore={handleSeeMoreClick}
-          onAddToFavorites={onAddToFavorites}
-        />
+        {fetchedPlaces ? (
+          <ListCards places={fetchedPlaces} loading={loadingPlaces} />
+        ) : (
+          <Center>
+            <Text>Aucun lieux disponibles</Text>
+          </Center>
+        )}
       </Stack>
     </Container>
   );

@@ -1,49 +1,61 @@
 // src/components/ListCards/ListCards.tsx
-import { Box, Stack } from "@chakra-ui/react";
+import { Box, Stack, Skeleton } from "@chakra-ui/react";
 import React from "react";
 import Card from "../Card/Card";
-import { mockPlaces, mockUsers } from "../../utils/mock";
+import { useNavigate } from "react-router-dom";
+import noImage from "../../assets/no-image.png";
 
 interface ListCardsProps {
-  favorites: string[]; // Array of favorite place names
-  onSeeMore: (title: string) => void;
-  onAddToFavorites: (title: string) => void;
-  data?: typeof mockPlaces; // Optional: array of places to display
+  places: {
+    images?: string;
+    title?: string;
+    description?: string;
+    author?: string;
+    username?: string;
+    id: string;
+  }[];
+  loading: boolean;
+  userAvatar?: string;
 }
 
-const ListCards: React.FC<ListCardsProps> = ({
-  favorites,
-  onSeeMore,
-  onAddToFavorites,
-  data,
-}) => {
-  // Use provided data if available; otherwise, use all mockPlaces
-  const places = data || mockPlaces;
+const ListCards = ({ places, loading, userAvatar }: ListCardsProps) => {
+  const navigate = useNavigate();
 
   return (
-    <Stack spacing={4}>
-      {places.map((place, index) => {
-        // Determine if the current place is a favorite
-        const isFavorite = favorites.includes(place.name);
-        // Find the user data for this card
-        const user = mockUsers.find((user) => user.username === place.author);
-
-        return (
-          <Card
-            key={index}
-            images={place.image}
-            title={place.name}
-            description={place.description}
-            userName={user ? user.username : "Unknown"}
-            userAvatar={user?.profilePicture || "https://via.placeholder.com/150"}
-            isFavorite={isFavorite}
-            onSeeMore={onSeeMore}
-            onAddToFavorites={onAddToFavorites}
-          />
-        );
-      })}
-      <Box h={54} />
-    </Stack>
+    <>
+      {loading ? (
+        places?.map(() => (
+          <Stack>
+            <Skeleton p="4" height="700px" width="380" />
+          </Stack>
+        ))
+      ) : (
+        <Stack spacing={4}>
+          {places?.map((place, index) => {
+            const images =
+              Array.isArray(place.images) && place.images.length > 0
+                ? place.images
+                    .map((img: { image: { url: string } }) => img.image?.url)
+                    .filter(Boolean)
+                : [noImage];
+            return (
+              <Card
+                userAvatar={userAvatar}
+                key={index}
+                images={images}
+                title={place.title}
+                description={place.description}
+                username={place.author || place.username}
+                onClick={() =>
+                  navigate(`/places/${encodeURIComponent(place.id)}`)
+                }
+              />
+            );
+          })}
+          <Box h={54} />
+        </Stack>
+      )}
+    </>
   );
 };
 

@@ -3,39 +3,19 @@ import { Box, Text, VStack, Flex, Button } from "@chakra-ui/react";
 import { useParams, useNavigate } from "react-router-dom";
 import ImageCarousel from "../../components/Card/ImageCarrousel";
 import LikeButton from "../../components/Card/LikeButton";
+import useGetPlace from "src/hooks/useGetPlace";
 
-interface DetailPageProps {
-  data: {
-    name: string;
-    description: string;
-    address: string;
-    geo: {
-      lat: number;
-      lng: number;
-    };
-    image: string[];
-  }[];
-  favorites: string[];
-  onAddToFavorites: (name: string) => void;
-}
-
-const DetailPage: React.FC<DetailPageProps> = ({
-  data,
-  favorites,
-  onAddToFavorites,
-}) => {
-  const { name } = useParams<{ name: string }>();
+const DetailPage: React.FC = () => {
+  const params = useParams();
+  const id = params.id;
   const navigate = useNavigate();
+  const { place, loading, error } = useGetPlace(id ?? "");
 
-  const item = data.find(
-    (item) => item.name.toLowerCase() === name?.toLowerCase()
-  );
-
-  if (!item) {
+  if (!id) {
     return (
       <Box textAlign="center" mt="10">
         <Text fontSize="xl" color="red.500">
-          Item not found
+          Invalid place ID
         </Text>
         <Button mt="4" colorScheme="blue" onClick={() => navigate("/")}>
           Back to Home
@@ -44,46 +24,63 @@ const DetailPage: React.FC<DetailPageProps> = ({
     );
   }
 
-  const isFavorite = favorites.includes(item.name);
+  if (loading) {
+    return (
+      <Box textAlign="center" mt="10">
+        <Text fontSize="xl">Chargement...</Text>
+      </Box>
+    );
+  }
+
+  if (error || !place) {
+    return (
+      <Box textAlign="center" mt="10">
+        <Text fontSize="xl" color="red.500">
+          Place not found
+        </Text>
+        <Button mt="4" colorScheme="blue" onClick={() => navigate("/")}>
+          Back to Home
+        </Button>
+      </Box>
+    );
+  }
 
   return (
     <Box maxW="lg" mx="auto" p="4">
-      <ImageCarousel images={item.image} title={item.name} />
+      <ImageCarousel
+        images={place.images?.map((img: any) => img.image?.url)}
+        title={place.name}
+      />
 
       <Flex justifyContent="space-between" my="4">
-        <LikeButton
-          title={item.name}
-          onAddToFavorites={onAddToFavorites}
-          isFavorite={isFavorite}
-        />
-
         <Button
           colorScheme="teal"
           onClick={() =>
-            (window.location.href = `/?lat=${item.geo.lat}&lng=${item.geo.lng}`)
+            (window.location.href = `/?lat=${place.geo?.lat}&lng=${place.geo?.lng}`)
           }
         >
-          View on Map
+          Voir sur la map
         </Button>
+        <LikeButton title={undefined} />
       </Flex>
 
       <Text fontWeight="bold" fontSize="3xl" mb="4" mt="6" textAlign="left">
-        {item.name}
+        {place.name}
       </Text>
 
       <VStack align="flex-start" spacing="4" mt="6">
-        <Text fontSize="lg">{item.description}</Text>
+        <Text fontSize="lg">{place.description}</Text>
 
         <Text fontSize="md" fontWeight="bold">
           Address:
         </Text>
-        <Text>{item.address}</Text>
+        <Text>{place.address}</Text>
 
         <Text fontSize="md" fontWeight="bold">
           Coordinates:
         </Text>
         <Text>
-          Latitude: {item.geo.lat}, Longitude: {item.geo.lng}
+          Latitude: {place.geo?.lat}, Longitude: {place.geo?.lng}
         </Text>
       </VStack>
     </Box>
