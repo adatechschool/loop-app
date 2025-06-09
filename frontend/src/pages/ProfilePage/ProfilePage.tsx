@@ -57,7 +57,7 @@ const ProfilePage: React.FC<ProfilePageProps> = ({
               icon={<HamburgerIcon />}
             />
             <MenuList>
-              <MenuItem>Paramètres</MenuItem>
+              <MenuItem onClick={() => navigate("/settings")}>Paramètres</MenuItem>
               <MenuItem color="red" onClick={handleLogout}>
                 Se déconnecter
               </MenuItem>

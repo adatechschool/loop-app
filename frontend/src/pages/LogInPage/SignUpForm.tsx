@@ -7,6 +7,7 @@ import {
   Heading,
   Container,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -22,6 +23,7 @@ const SignupForm: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string>("");
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,11 +54,20 @@ const SignupForm: React.FC = () => {
         email,
         password,
         role: "user",
-        profilePicture: profilePicture || "", // Include the Cloudinary image URL if uploaded
+        profilePicture: profilePicture || "",
       });
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _ } = response.data;
+
+      toast({
+        title: "Compte créé !",
+        description: "Ton compte a été créé avec succès.",
+        status: "success",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
 
       navigate("/");
     } catch (err: any) {

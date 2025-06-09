@@ -1,59 +1,62 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "axios";
-import {
-  Box,
-  Button,
-  Input,
-  Stack,
-  Heading,
-  Container,
-} from "@chakra-ui/react";
+import { Box, Button, Input, Stack, Heading, Container, Text, useToast } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import BackButton from "src/components/BackButton";
+import { AuthContext } from "src/contexts/AuthContext";
 import PORT from "src/utils/constant";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  const { login } = useContext(AuthContext);
   const navigate = useNavigate();
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMessage("");
 
     try {
       const response = await axios.post(`http://localhost:${PORT}/api/login`, {
         username,
         password,
       });
+      const { token } = response.data;
+      login(token);
 
-      const { user } = response.data;
-      localStorage.setItem("token", user.token);
-      navigate("/profile");
+      toast({
+        title: "Connexion réussie",
+        description: "Vous allez être redirigé vers votre profil.",
+        status: "success",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+
+      setTimeout(() => {
+        navigate("/");
+      }, 3000);
+
     } catch (error) {
-      setErrorMessage("Mot de passe ou nom d'utilisateur invalide");
-      console.error("Error :", (error as Error).message);
+      setErrorMessage("Nom d'utilisateur ou mot de passe invalide");
+      toast({
+        title: "Erreur",
+        description: "Nom d'utilisateur ou mot de passe invalide",
+        status: "error",
+        duration: 4000,
+        isClosable: true,
+        position: "top",
+      });
+      console.error("Login error:", error);
     }
   };
-  return (
-    <Container
-      p={4}
-      minH="100vh"
-      display="flex"
-      alignItems="center"
-      justifyContent="center"
-      position="relative"
-    >
-      <Box position="absolute" top={4} left={4}>
-        <BackButton />
-      </Box>
 
+  return (
+    <Container p={4} minH="100vh" display="flex" alignItems="center" justifyContent="center">
       <Box w="full" maxW="md" p={6} borderWidth={1} borderRadius="md">
-        <Heading textAlign="center" mb={6}>
-          Connexion
-        </Heading>
-        <Stack spacing={4} as="form" onSubmit={handleSubmit}>
+        <Heading textAlign="center" mb={6}>Connexion</Heading>
+        <Stack as="form" spacing={4} onSubmit={handleSubmit}>
           <Input
             placeholder="Email ou Nom d'utilisateur"
             value={username}
@@ -67,11 +70,8 @@ const LoginForm = () => {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-
-          {errorMessage && <p style={{ color: "red" }}> {errorMessage} </p>}
-          <Button colorScheme="teal" type="submit">
-            Se connecter
-          </Button>
+          {errorMessage && <Text color="red.500">{errorMessage}</Text>}
+          <Button colorScheme="teal" type="submit">Se connecter</Button>
         </Stack>
       </Box>
     </Container>
