@@ -1,19 +1,20 @@
 import React from "react";
 import { Box, Heading, Flex } from "@chakra-ui/react";
-
 import FormAddList from "src/components/FormAddList";
 
 const AddPage = () => {
   return (
-    <>
-      <Flex justify={"center"}>
-        <Box minH={"100vh"} maxW={"md"}>
-          <Heading textAlign={"center"}>Ajouter un lieu</Heading>
-          <FormAddList />;
+    <Box pb="70px"> {/* paddingBottom pour éviter que la navbar fixe cache le contenu */}
+      <Flex justify="center">
+        <Box maxW="md" w="full" px={4}>
+          <Heading textAlign="center" mb={6}>
+            Ajouter un lieu
+          </Heading>
+          <FormAddList />
         </Box>
       </Flex>
-      <Box minH={54} />
-    </>
+      <Box minH={35} />
+    </Box>
   );
 };
 

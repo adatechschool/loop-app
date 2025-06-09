@@ -19,7 +19,7 @@ const Navbar: React.FC = () => {
 
   const isActive = (path: string) => location.pathname === path;
 
-  const handleIconClick = () => {};
+  const handleIconClick = () => { };
 
   const activeColor = "#38A169";
 

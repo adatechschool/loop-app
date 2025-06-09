@@ -151,19 +151,12 @@ const FormAddList = () => {
   };
 
   return (
-    <Flex minH={"100vh"} align={"center"} justify={"center"} bg={"white"}>
+    <Flex minH={"calc(100vh - 70px)"} align={"center"} justify={"center"} bg={"white"}>
       {loading ? (
         <CircularProgress isIndeterminate color="green.300" />
       ) : (
         <form onSubmit={handleSubmit}>
-          <Stack
-            spacing={6}
-            p={6}
-            bg={"white"}
-            w={"full"}
-            maxW={"md"}
-            rounded={"xl"}
-          >
+          <Stack spacing={6} p={6} bg={"white"} w={"full"} maxW={"md"} rounded={"xl"}>
             {error && (
               <Text color="red.500" mb={2}>
                 {error}
@@ -249,9 +242,10 @@ const FormAddList = () => {
                 <FormLabel>Localisation</FormLabel>
                 <Stack spacing={6} direction={["row"]}>
                   <FaLocationCrosshairs size="30px" />
-                  <Button type="button">
-                    {currentLocation?.coords.latitude},
-                    {currentLocation?.coords.longitude}
+                  <Button type="button" isDisabled>
+                    {currentLocation
+                      ? `${currentLocation.coords.latitude.toFixed(4)}, ${currentLocation.coords.longitude.toFixed(4)}`
+                      : "Localisation inconnue"}
                   </Button>
                 </Stack>
               </FormControl>

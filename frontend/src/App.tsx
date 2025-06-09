@@ -1,113 +1,115 @@
 import React, { useState } from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import {
-  HomePage,
-  ListPage,
-  AddPage,
-  SearchPage,
-  ProfilePage,
-  DetailPage,
-} from "./pages";
+import { Routes, Route, } from "react-router-dom";
+import { HomePage, ListPage, AddPage, SearchPage, ProfilePage, DetailPage } from "./pages";
 import LogIn from "./pages/LogInPage/LogIn";
-import LogInForm from "./pages/LogInPage/LogInForm";
+import LoginForm from "./pages/LogInPage/LogInForm";
 import SignUpForm from "./pages/LogInPage/SignUpForm";
-import { mockPlaces } from "./utils/mock";
 import MainLayout from "./layouts/MainLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import PrivateRoute from "./routes/PrivateRoute";
-import LoginPage from "./pages/LogInPage/LogIn";
+import PublicRoute from "./routes/PublicRoute";
 import { GeolocationProvider } from "./providers/GeolocationContext";
+import SettingsPage from "./components/User/SettingsPage";
+import { AuthProvider } from "src/contexts/AuthContext";
+import { mockPlaces } from "./utils/mock";
 
 const App: React.FC = () => {
   const [favorites, setFavorites] = useState<string[]>([]);
 
   const handleAddToFavorites = (name: string) => {
-    setFavorites((prevFavorites) =>
-      prevFavorites.includes(name)
-        ? prevFavorites.filter((fav) => fav !== name)
-        : [...prevFavorites, name]
+    setFavorites((prev) =>
+      prev.includes(name) ? prev.filter((fav) => fav !== name) : [...prev, name]
     );
   };
 
-  const token = localStorage.getItem("token");
   return (
-    <GeolocationProvider>
-      <Routes>
-        <Route element={<MainLayout />}>
-          <Route
-            path="/"
-            element={
-              localStorage.getItem("token") ? (
-                <HomePage />
-              ) : (
-                <Navigate to="/login" replace />
-              )
-            }
-          />
-
-          <Route
-            path="/list"
-            element={
-              <ListPage
-                favorites={favorites}
-                onAddToFavorites={handleAddToFavorites}
-              />
-            }
-          />
-          <Route
-            path="/add"
-            element={
-              token ? (
+    <AuthProvider>
+      <GeolocationProvider>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route
+              path="/"
+              element={
+                <PrivateRoute>
+                  <HomePage />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/list"
+              element={
+                <ListPage favorites={favorites} onAddToFavorites={handleAddToFavorites} />
+              }
+            />
+            <Route
+              path="/add"
+              element={
                 <PrivateRoute>
                   <AddPage />
                 </PrivateRoute>
-              ) : (
-                <LoginPage />
-              )
-            }
-          />
-          <Route
-            path="/search"
-            element={
-              <SearchPage
-                favorites={favorites}
-                onAddToFavorites={handleAddToFavorites}
-              />
-            }
-          />
-          <Route
-            path="/profile"
-            element={
-              token ? (
+              }
+            />
+            <Route
+              path="/search"
+              element={
+                <SearchPage favorites={favorites} onAddToFavorites={handleAddToFavorites} />
+              }
+            />
+            <Route
+              path="/profile"
+              element={
                 <PrivateRoute>
-                  <ProfilePage
-                    favorites={favorites}
-                    onAddToFavorites={handleAddToFavorites}
-                  />
+                  <ProfilePage favorites={favorites} onAddToFavorites={handleAddToFavorites} />
                 </PrivateRoute>
-              ) : (
-                <LoginPage />
-              )
-            }
-          />
+              }
+            />
+            <Route
+              path="/detail/:name"
+              element={
+                <DetailPage data={mockPlaces} favorites={favorites} onAddToFavorites={handleAddToFavorites} />
+              }
+            />
+          </Route>
+
           <Route
-            path="/detail/:name"
+            path="/settings"
             element={
-              <DetailPage
-                data={mockPlaces}
-                favorites={favorites}
-                onAddToFavorites={handleAddToFavorites}
-              />
+              <PrivateRoute>
+                <SettingsPage />
+              </PrivateRoute>
             }
           />
-        </Route>
-        <Route element={<AuthLayout />}>
-          <Route path="/login" element={<LogIn />} />
-          <Route path="/login-form" element={<LogInForm />} />
-          <Route path="/signup-form" element={<SignUpForm />} />
-        </Route>
-      </Routes>
-    </GeolocationProvider>
+
+          <Route element={<AuthLayout />}>
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <LogIn />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/login-form"
+              element={
+                <PublicRoute>
+                  <LoginForm />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/signup-form"
+              element={
+                <PublicRoute>
+                  <SignUpForm />
+                </PublicRoute>
+              }
+            />
+          </Route>
+
+        </Routes>
+      </GeolocationProvider>
+    </AuthProvider>
   );
 };
 
