@@ -38,6 +38,9 @@ const ProfilePage = () => {
   const userPlaces = fetchedPlaces.filter(
     (place) => place.author === user?.username
   );
+
+  const reverseOrderedPlaces = [...userPlaces].reverse();
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -96,7 +99,7 @@ const ProfilePage = () => {
           <TabPanel>
             {userPlaces[0] ? (
               <ListCards
-                places={userPlaces}
+                places={reverseOrderedPlaces}
                 loading={loadingPlaces}
                 userAvatar={user?.profilePicture}
               />
