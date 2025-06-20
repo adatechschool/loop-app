@@ -4,7 +4,7 @@ import FormAddList from "src/components/FormAddList";
 
 const AddPage = () => {
   return (
-    <Box pb="70px"> {/* paddingBottom pour éviter que la navbar fixe cache le contenu */}
+    <Box pb="70px">
       <Flex justify="center">
         <Box maxW="md" w="full" px={4}>
           <Heading textAlign="center" mb={6}>

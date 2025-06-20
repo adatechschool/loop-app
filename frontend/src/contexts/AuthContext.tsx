@@ -1,8 +1,8 @@
 import React, { createContext, useState, useEffect, useCallback } from "react";
 import apiClient from "src/utils/apiClient";
-
 interface AuthContextType {
     user: any | null;
+    token: string | null;
     loading: boolean;
     error: string | null;
     login: (token: string) => void;
@@ -12,6 +12,7 @@ interface AuthContextType {
 
 export const AuthContext = createContext<AuthContextType>({
     user: null,
+    token: null,
     loading: true,
     error: null,
     login: () => { },
@@ -21,11 +22,11 @@ export const AuthContext = createContext<AuthContextType>({
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [user, setUser] = useState<any | null>(null);
+    const [token, setToken] = useState<string | null>(() => localStorage.getItem("token"));
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
     const fetchUser = useCallback(async () => {
-        const token = localStorage.getItem("token");
         if (!token) {
             setUser(null);
             setLoading(false);
@@ -44,10 +45,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             setUser(null);
             setError(err.message || "Failed to fetch user");
             localStorage.removeItem("token");
+            setToken(null);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [token]);
 
     useEffect(() => {
         fetchUser();
@@ -55,16 +57,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const login = (newToken: string) => {
         localStorage.setItem("token", newToken);
-        fetchUser(); // 🔄 Force refetch avec le nouveau token
+        setToken(newToken);
+        fetchUser();
     };
 
     const logout = () => {
         localStorage.removeItem("token");
+        setToken(null);
         setUser(null);
     };
 
     return (
-        <AuthContext.Provider value={{ user, loading, error, login, logout, refetchUser: fetchUser }}>
+        <AuthContext.Provider value={{ user, token, loading, error, login, logout, refetchUser: fetchUser }}>
             {children}
         </AuthContext.Provider>
     );
