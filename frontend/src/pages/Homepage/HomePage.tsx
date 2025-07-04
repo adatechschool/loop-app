@@ -1,10 +1,10 @@
 import React from "react";
-import { MapComponent } from "src/components";
+import { MapContainerWrapper } from "src/components";
 
 const HomePage = () => {
   return (
     <div>
-      <MapComponent />
+      <MapContainerWrapper />
     </div>
   );
 };

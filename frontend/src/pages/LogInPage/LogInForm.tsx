@@ -1,6 +1,15 @@
 import React, { useState, useContext } from "react";
 import axios from "axios";
-import { Box, Button, Input, Stack, Heading, Container, Text, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Input,
+  Stack,
+  Heading,
+  Container,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "src/contexts/AuthContext";
 import PORT from "src/utils/constant";
@@ -27,7 +36,7 @@ const LoginForm = () => {
 
       toast({
         title: "Connexion réussie",
-        description: "Vous allez être redirigé vers votre profil.",
+        description: `Bienvenue ${username} !`,
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -37,7 +46,6 @@ const LoginForm = () => {
       setTimeout(() => {
         navigate("/");
       }, 3000);
-
     } catch (error) {
       setErrorMessage("Nom d'utilisateur ou mot de passe invalide");
       toast({
@@ -53,9 +61,17 @@ const LoginForm = () => {
   };
 
   return (
-    <Container p={4} minH="100vh" display="flex" alignItems="center" justifyContent="center">
+    <Container
+      p={4}
+      minH="100vh"
+      display="flex"
+      alignItems="center"
+      justifyContent="center"
+    >
       <Box w="full" maxW="md" p={6} borderWidth={1} borderRadius="md">
-        <Heading textAlign="center" mb={6}>Connexion</Heading>
+        <Heading textAlign="center" mb={6}>
+          Connexion
+        </Heading>
         <Stack as="form" spacing={4} onSubmit={handleSubmit}>
           <Input
             placeholder="Email ou Nom d'utilisateur"
@@ -71,7 +87,9 @@ const LoginForm = () => {
             required
           />
           {errorMessage && <Text color="red.500">{errorMessage}</Text>}
-          <Button colorScheme="teal" type="submit">Se connecter</Button>
+          <Button colorScheme="teal" type="submit">
+            Se connecter
+          </Button>
         </Stack>
       </Box>
     </Container>
