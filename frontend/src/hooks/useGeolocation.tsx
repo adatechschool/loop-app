@@ -1,29 +1,29 @@
 import { useEffect, useState } from "react";
 
 const useGeolocation = () => {
-  interface LocationPosition {
-    coords: {
-      latitude: number;
-      longitude: number;
-      accuracy: number;
-    };
-  }
+  // interface LocationPosition {
+  //   coords: {
+  //     latitude: number;
+  //     longitude: number;
+  //     accuracy: number;
+  //   };
+  // }
 
-  interface LocationPositionError {
-    code: number;
-    message: string;
-  }
+  // interface LocationPositionError {
+  //   code: number;
+  //   message: string;
+  // }
 
-  const [location, setLocation] = useState<LocationPosition | null>(null);
-  const [error, setError] = useState<LocationPositionError | null>(null);
+  const [location, setLocation] = useState<GeolocationPosition | null>(null);
+  const [error, setError] = useState<GeolocationPositionError | null>(null);
 
   useEffect(() => {
     const watchPosition = navigator.geolocation.watchPosition(
-      (position: LocationPosition) => {
+      (position: GeolocationPosition) => {
         setLocation(position);
         console.log("Geolocation position:", position);
       },
-      (error: LocationPositionError) => {
+      (error: GeolocationPositionError) => {
         setError(error);
         console.error(`Geolocation error (${error.code}): ${error.message}`);
       }
