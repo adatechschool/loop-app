@@ -32,11 +32,12 @@ const ListCards = ({ places, loading, userAvatar }: ListCardsProps) => {
       ) : (
         <Stack spacing={4}>
           {places?.map((place, index) => {
+            console.log("place dans ListCards:", place);
             const images =
               Array.isArray(place.images) && place.images.length > 0
                 ? place.images
-                    .map((img: { image: { url: string } }) => img.image?.url)
-                    .filter(Boolean)
+                  .map((img: { image: { url: string } }) => img.image?.url)
+                  .filter(Boolean)
                 : [noImage];
             return (
               <Card

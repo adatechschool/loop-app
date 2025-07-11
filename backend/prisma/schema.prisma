@@ -40,6 +40,7 @@ model ImageUser {
   imageId    String
   image      Image    @relation(fields: [imageId], references: [id])
   user       User     @relation(fields: [userId], references: [id])
+  
 }
 
 model User {
@@ -53,21 +54,29 @@ model User {
   favorites      Favorite[]
   images         ImageUser[]
   places         PlaceUser[]
+
+  placesCreated  Place[]     @relation("UserToPlace")
 }
 
 model Place {
   id            String       @id @default(uuid())
   name          String
   address       String
-  author        String
-  geoId         String
-  accessibility Boolean?
   description   String?
-  favorites     Favorite[]
+  accessibility Boolean?
+
+  author        String
+  authorId      String
+
+  geoId         String
+
   geo           Geo          @relation(fields: [geoId], references: [id])
   images        PlaceImage[]
   types         PlaceType[]
   users         PlaceUser[]
+  favorites     Favorite[]
+
+  authorUser    User         @relation("UserToPlace", fields: [authorId], references: [id])
 }
 
 model Geo {
