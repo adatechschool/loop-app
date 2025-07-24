@@ -19,8 +19,6 @@ const useQueryUser = () => {
 
     try {
       setLoading(true);
-      console.log("Token utilisé pour /api/user :", token);
-
       const response = await apiClient.get(`/api/user`, {
         headers: { Authorization: `Bearer ${token}` },
       });

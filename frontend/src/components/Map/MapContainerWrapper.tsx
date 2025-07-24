@@ -1,9 +1,10 @@
 // src/components/map/MapComponent.tsx
 import React from "react";
 import { MapContainer } from "react-leaflet";
-import { useGeolocationContext } from "../../providers/GeolocationContext";
+import { useGeolocationContext } from "../../contexts/GeolocationContext";
 import ChangeView from "../../utils/ChangeView";
 import CurrentLocationMarker from "./CurrentLocationMarker";
+import PlacesLocationMarkers from "./PlacesLocationMarkers";
 import BaseMapLayers from "./BaseMapLayers";
 import { getMapZoom, getInitialCoords } from "./functions";
 import "./style.css";
@@ -23,15 +24,18 @@ const MapContainerWrapper = () => {
   const zoom = getMapZoom(paramLat, paramLng);
 
   return (
-    <MapContainer
-      center={coords}
-      zoom={zoom}
-      style={{ height: "100vh", width: "100%" }}
-    >
-      <BaseMapLayers initialPosition={coords} />
-      <ChangeView coords={coords} zoom={zoom} />
-      <CurrentLocationMarker />
-    </MapContainer>
+    <>
+      <MapContainer
+        center={coords}
+        zoom={zoom}
+        style={{ height: "100vh", width: "100%" }}
+      >
+        <BaseMapLayers />
+        <ChangeView coords={coords} zoom={zoom} />
+        <CurrentLocationMarker />
+        <PlacesLocationMarkers />
+      </MapContainer>
+    </>
   );
 };
 

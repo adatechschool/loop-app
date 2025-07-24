@@ -23,14 +23,13 @@ import { FaAccessibleIcon, FaPlus, FaTimes } from "react-icons/fa";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 import PORT from "src/utils/constant";
-import { useGeolocationContext } from "src/providers/GeolocationContext";
+import { useGeolocationContext } from "src/contexts/GeolocationContext";
 import { AuthContext } from "src/contexts/AuthContext";
 
 const FormAddList = () => {
   const { location: currentLocation } = useGeolocationContext();
-  const { token, logout } = useContext(AuthContext);
+  const { token } = useContext(AuthContext);
   const [error, setError] = useState<string>("");
-  const [file, setFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -88,7 +87,7 @@ const FormAddList = () => {
       console.error("Erreur lors de l'upload image", error);
       setError("Erreur lors du téléchargement de l'image");
       setImagePreview(null);
-      setFile(null);
+      // setFile(null);
     } finally {
       setIsUploading(false);
     }
@@ -98,7 +97,6 @@ const FormAddList = () => {
     const selectedFile = e.target.files?.[0] || null;
 
     if (selectedFile) {
-      // Vérifier le type de fichier
       if (!selectedFile.type.startsWith("image/")) {
         toast({
           title: "Erreur",
@@ -123,8 +121,6 @@ const FormAddList = () => {
         return;
       }
 
-      setFile(selectedFile);
-
       const reader = new FileReader();
       reader.onload = (e) => {
         setImagePreview(e.target?.result as string);
@@ -136,7 +132,6 @@ const FormAddList = () => {
   };
 
   const handleRemoveImage = () => {
-    setFile(null);
     setImagePreview(null);
     setPlaceFieldsValues((prev) => ({
       ...prev,
@@ -270,8 +265,6 @@ const FormAddList = () => {
                     border="2px solid"
                     borderColor="gray.200"
                   />
-
-                  {/* Overlay avec boutons d'action */}
                   <Flex position="absolute" top={2} right={2} gap={2}>
                     <IconButton
                       aria-label="Supprimer l'image"
