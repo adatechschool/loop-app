@@ -1,0 +1,8 @@
+.leaflet-marker-icon:not(.location-marker-icon) {
+  display: none;
+}
+
+.leaflet-marker-shadow:not(.location-marker-icon) {
+  display: none !important;
+}
+

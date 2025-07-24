@@ -1,31 +1,22 @@
-import { useEffect, useRef } from "react";
-import { useMap } from "react-leaflet";
-import L from "leaflet";
-import { useGeolocationContext } from "../../providers/GeolocationContext";
+import { useGeolocationContext } from "../../contexts/GeolocationContext";
+import { useMemo } from "react";
+import LocationMarker from "../Icons/LocationMarker";
 
 const CurrentLocationMarker = () => {
-  const map = useMap();
   const { location, error } = useGeolocationContext();
-  const markerRef = useRef<L.Marker>();
 
-  useEffect(() => {
-    if (location) {
-      const lat = location.coords.latitude;
-      const lng = location.coords.longitude;
-
-      if (markerRef.current) {
-        markerRef.current.setLatLng([lat, lng]);
-      } else {
-        markerRef.current = L.marker([lat, lng]).addTo(map);
-      }
-    }
-  }, [location, map]);
+  const position = useMemo(() => {
+    if (!location) return null;
+    return [location.coords.latitude, location.coords.longitude];
+  }, [location]);
 
   if (error) {
     console.error(`Geolocation error (${error.code}): ${error.message}`);
   }
 
-  return null;
+  if (!position) return null;
+
+  return <LocationMarker position={position as [number, number]} />;
 };
 
 export default CurrentLocationMarker;

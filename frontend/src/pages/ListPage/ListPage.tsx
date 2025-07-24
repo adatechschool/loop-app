@@ -1,27 +1,25 @@
 import React from "react";
-import {
-  Center,
-  Heading,
-  SimpleGrid,
-  Text,
-  Stack,
-  Skeleton,
-} from "@chakra-ui/react";
+import { Center, Heading, SimpleGrid, Text } from "@chakra-ui/react";
 import { ListCards } from "src/components";
-import useQueryPlaces from "src/hooks/useQueryPlaces";
+import { usePlacesContext } from "../../contexts/PlacesContext";
 
 const ListPage = () => {
-  const {
-    places: fetchedPlaces,
-    loading: loadingPlaces,
-    error,
-  } = useQueryPlaces();
+  const placesContext = usePlacesContext();
+
+  const fetchedPlaces = placesContext?.places ?? [];
+  const loadingPlaces = placesContext?.loading ?? false;
+  const error = placesContext?.error;
 
   const reverseOrderedPlaces = [...fetchedPlaces].reverse();
 
   return (
     <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing="15px" p="4">
       <Heading>Lieux à proximité</Heading>
+      {error && (
+        <Center>
+          <Text color="red.500">{error}</Text>
+        </Center>
+      )}
       {reverseOrderedPlaces ? (
         <ListCards places={reverseOrderedPlaces} loading={loadingPlaces} />
       ) : (

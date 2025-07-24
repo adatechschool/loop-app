@@ -1,17 +1,8 @@
 // src/components/map/MapLayer.tsx
-import { TileLayer, Marker } from "react-leaflet";
+import { TileLayer } from "react-leaflet";
 
-interface MapLayerProps {
-  initialPosition: [number, number];
-}
-
-const BaseMapLayers = ({ initialPosition }: MapLayerProps) => {
-  return (
-    <>
-      <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-      <Marker position={initialPosition} />
-    </>
-  );
+const BaseMapLayers = () => {
+  return <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />;
 };
 
 export default BaseMapLayers;
