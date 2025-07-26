@@ -32,7 +32,6 @@ const Card: React.FC<CardProps> = ({
   onClick,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
-
   return (
     <Box
       maxW="sm"
@@ -43,7 +42,6 @@ const Card: React.FC<CardProps> = ({
       onClick={onClick}
       cursor={onClick ? "pointer" : undefined}
       _hover={{ shadow: "md" }}
-      key={title}
     >
       <Flex align="center" mt="3" mb="6">
         <Avatar size="sm" mr="2" src={userAvatar} />

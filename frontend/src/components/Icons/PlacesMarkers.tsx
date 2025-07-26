@@ -1,13 +1,25 @@
 import L from "leaflet";
 import { Marker } from "react-leaflet";
+import { useDisclosure } from "@chakra-ui/react";
+import PreviewCard from "../PreviewCard/PreviewCard";
 import "./style.css";
 
 interface CustomMarkerProps {
   position: [number, number];
-  name?: string;
+  name: string;
+  address: string;
+  id: string;
+  image: string;
 }
 
-const PlacesMarkers = ({ position, name }: CustomMarkerProps) => {
+const PlacesMarkers = ({
+  position,
+  name,
+  address,
+  id,
+  image,
+}: CustomMarkerProps) => {
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const placesMarker = L.divIcon({
     className: "location-marker-icon",
     html: `
@@ -23,7 +35,22 @@ const PlacesMarkers = ({ position, name }: CustomMarkerProps) => {
     popupAnchor: [0, -26],
   });
 
-  return <Marker position={position} icon={placesMarker} />;
+  return (
+    <Marker
+      position={position}
+      icon={placesMarker}
+      eventHandlers={{ click: onOpen }}
+    >
+      <PreviewCard
+        name={name}
+        address={address}
+        id={id}
+        image={image}
+        isOpen={isOpen}
+        onClose={onClose}
+      />
+    </Marker>
+  );
 };
 
 export default PlacesMarkers;

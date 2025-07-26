@@ -20,7 +20,10 @@ const PlacesLocationMarkers = () => {
         <PlacesMarkers
           key={place.id}
           position={[place.geo.lat, place.geo.lng]}
-          name={place.name || "Unnamed Place"}
+          name={place.name}
+          address={place.address}
+          id={place.id}
+          image={place.images?.[0]?.image?.url || ""}
         />
       ))}
     </>
