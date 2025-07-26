@@ -8,7 +8,7 @@ import noImage from "../../assets/no-image.png";
 interface ListCardsProps {
   places: {
     images?: string;
-    title?: string;
+    name?: string;
     description?: string;
     author?: string;
     username?: string;
@@ -43,7 +43,7 @@ const ListCards = ({ places, loading, userAvatar }: ListCardsProps) => {
                 userAvatar={userAvatar}
                 key={index}
                 images={images}
-                title={place.title}
+                title={place.name}
                 description={place.description}
                 username={place.author || place.username}
                 onClick={() =>
