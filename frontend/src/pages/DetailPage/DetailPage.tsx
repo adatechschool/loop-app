@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import ImageCarousel from "../../components/Card/ImageCarrousel";
 import LikeButton from "../../components/Card/LikeButton";
 import useGetPlace from "src/hooks/useGetPlace";
+import Backbutton from "src/components/BackButton";
 
 const DetailPage: React.FC = () => {
   const params = useParams();
@@ -14,6 +15,7 @@ const DetailPage: React.FC = () => {
   if (!id) {
     return (
       <Box textAlign="center" mt="10">
+
         <Text fontSize="xl" color="red.500">
           Invalid place ID
         </Text>
@@ -46,7 +48,11 @@ const DetailPage: React.FC = () => {
   }
 
   return (
-    <Box maxW="lg" mx="auto" p="4">
+    <Box maxW="lg" mx="auto" p="4" position='relative'>
+      <Box position="absolute" top="4" left="4" zIndex="10">
+        <Backbutton />
+      </Box>
+      <Box mt="16"></Box>
       <ImageCarousel
         images={place.images?.map((img: any) => img.image?.url)}
         title={place.name}
