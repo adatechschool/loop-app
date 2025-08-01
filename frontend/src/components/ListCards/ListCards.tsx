@@ -10,8 +10,10 @@ interface ListCardsProps {
     images?: string;
     name?: string;
     description?: string;
-    author?: string;
-    username?: string;
+    author?: {
+      username?: string;
+      profilePicture?: string;
+    };
     id: string;
   }[];
   loading: boolean;
@@ -40,12 +42,14 @@ const ListCards = ({ places, loading, userAvatar }: ListCardsProps) => {
                 : [noImage];
             return (
               <Card
-                userAvatar={userAvatar}
+                userAvatar={
+                  userAvatar || place.author?.profilePicture || noImage
+                }
                 key={index}
                 images={images}
                 title={place.name}
                 description={place.description}
-                username={place.author || place.username}
+                username={place.author?.username}
                 onClick={() =>
                   navigate(`/places/${encodeURIComponent(place.id)}`)
                 }

@@ -53,13 +53,15 @@ model User {
   favorites      Favorite[]
   images         ImageUser[]
   places         PlaceUser[]
+  placesCreated  Place[]     @relation("UserCreatedPlaces")
 }
 
 model Place {
   id            String       @id @default(uuid())
   name          String
   address       String
-  author        String
+  authorId      String?
+  author        User?        @relation("UserCreatedPlaces", fields: [authorId], references: [id])
   geoId         String
   accessibility Boolean?
   description   String?

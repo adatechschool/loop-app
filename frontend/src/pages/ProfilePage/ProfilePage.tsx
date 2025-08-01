@@ -36,8 +36,10 @@ const ProfilePage = () => {
   } = useQueryPlaces();
 
   const userPlaces = fetchedPlaces.filter(
-    (place) => place.author === user?.username
+    (place) => place.author?.username === user?.username
   );
+
+  console.log("User Places:", userPlaces);
 
   const reverseOrderedPlaces = [...userPlaces].reverse();
 

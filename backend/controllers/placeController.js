@@ -7,7 +7,6 @@ exports.createPlace = async (req, res) => {
 
   try {
     const userId = req.user.id;
-    const author = req.user.username;
 
     const geoData = await prisma.geo.create({
       data: {
@@ -22,7 +21,7 @@ exports.createPlace = async (req, res) => {
         address,
         description: description || null,
         accessibility,
-        author,
+        authorId: userId,
         geoId: String(geoData.id),
         types: {
           create: types.map((typeId) => ({
@@ -67,6 +66,7 @@ exports.getAllPlaces = async (req, res) => {
         types: true,
         images: { include: { image: true } },
         geo: true,
+        author: true
       },
     })
 
@@ -93,6 +93,7 @@ exports.getPlaceById = async (req, res) => {
         types: true,
         images: { include: { image: true } },
         geo: true,
+        author: true,
       },
     });
 
@@ -105,11 +106,13 @@ exports.getPlaceById = async (req, res) => {
       place,
     });
   } catch (error) {
-    console.error("Error fetching place:", error);
-    res.status(500).json({
-      success: false,
-      message: "Error fetching place",
-    });
-  }
+  console.error("Error fetching place:", error);
+  res.status(500).json({
+    success: false,
+    message: "Error fetching place",
+    error: error.message,
+    stack: error.stack, // pour debugger
+  });
+}
 };
 
