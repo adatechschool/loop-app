@@ -42,6 +42,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({
   };
   return !token ? null : (
     <IconButton
+      ml={2}
       aria-label="Add to Favorites"
       icon={favorite ? <MdFavorite color="red" /> : <MdFavoriteBorder />}
       onClick={toggleFavorite}

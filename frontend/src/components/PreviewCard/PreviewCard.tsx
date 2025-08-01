@@ -51,8 +51,6 @@ const PreviewCard = ({
           >
             Voir plus
           </Button>
-
-          <Button ml={2}>Favoris</Button>
           <LikeButton title={name} />
           <Box w="200px" h="200px" mt={4} overflow="hidden" borderRadius="md">
             <Image src={image} objectFit="cover" w="100%" h="100%" alt={name} />
