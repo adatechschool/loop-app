@@ -66,9 +66,9 @@ exports.getAllPlaces = async (req, res) => {
         types: true,
         images: { include: { image: true } },
         geo: true,
-        author: true
+        author: true,
       },
-    })
+    });
 
     res.status(200).json({
       success: true,
@@ -106,13 +106,108 @@ exports.getPlaceById = async (req, res) => {
       place,
     });
   } catch (error) {
-  console.error("Error fetching place:", error);
-  res.status(500).json({
-    success: false,
-    message: "Error fetching place",
-    error: error.message,
-    stack: error.stack, // pour debugger
-  });
-}
+    console.error("Error fetching place:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching place",
+      error: error.message,
+      stack: error.stack, // pour debugger
+    });
+  }
 };
 
+exports.updatePlace = async (req, res) => {
+  const { id } = req.params;
+  const { name, address, description, accessibility, geo, types } = req.body;
+
+  try {
+    const place = await prisma.place.findUnique({
+      where: { id: id },
+    });
+
+    if (!place) {
+      return res.status(404).json({ message: "Place not found" });
+    }
+
+    const updatedPlace = await prisma.place.update({
+      where: { id: id },
+      data: {
+        name,
+        address,
+        description: description || null,
+        accessibility,
+        geo: {
+          update: {
+            lat: geo.lat,
+            lng: geo.lng,
+          },
+        },
+        types: {
+          deleteMany: {},
+          create: types.map((typeId) => ({
+            type: { connect: { id: typeId } },
+          })),
+        },
+      },
+      include: {
+        types: true,
+      },
+    });
+
+    const formattedPlace = {
+      ...updatedPlace,
+      types: updatedPlace.types.map((type) => type.typeId),
+    };
+
+    res.status(200).json({
+      message: "Place updated successfully",
+      place: formattedPlace,
+    });
+  } catch (error) {
+    console.error("Error updating place:", error);
+    res.status(500).json({
+      message: "Error updating place",
+      error: error.message,
+    });
+  }
+};
+
+exports.deletePlace = async (req, res) => {
+  const { id } = req.params;
+  const placeId = id.trim();
+
+  try {
+    const place = await prisma.place.findUnique({
+      where: { id: placeId },
+    });
+
+    if (!place) {
+      return res.status(404).json({ message: "Place not found" });
+    }
+
+    await prisma.$transaction([
+      prisma.placeUser.deleteMany({
+        where: { placeId: placeId },
+      }),
+      prisma.placeType.deleteMany({
+        where: { placeId: placeId },
+      }),
+      prisma.placeImage.deleteMany({
+        where: { placeId: placeId },
+      }),
+      prisma.place.delete({
+        where: { id: placeId },
+      }),
+    ]);
+
+    res
+      .status(200)
+      .json({ message: "Place and all related records deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting place:", error);
+    res.status(500).json({
+      message: "Error deleting place",
+      error: error.message,
+    });
+  }
+};

@@ -7,6 +7,7 @@ console.log(placeController);
 router.post("/places", authenticateToken, placeController.createPlace);
 router.get("/places", authenticateToken, placeController.getAllPlaces);
 router.get("/places/:id", authenticateToken, placeController.getPlaceById);
-
+router.patch("/places/:id", authenticateToken, placeController.updatePlace);
+router.delete("/places/:id", authenticateToken, placeController.deletePlace);
 
 module.exports = router;

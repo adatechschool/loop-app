@@ -3,7 +3,7 @@ import { Center, Heading, SimpleGrid, Text } from "@chakra-ui/react";
 import { ListCards } from "src/components";
 import { usePlacesContext } from "../../contexts/PlacesContext";
 
-const ListPage = () => {
+const ListPage: React.FC = () => {
   const placesContext = usePlacesContext();
 
   const fetchedPlaces = placesContext?.places ?? [];

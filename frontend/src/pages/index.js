@@ -4,5 +4,14 @@ import ListPage from "./ListPage/ListPage";
 import ProfilePage from "./ProfilePage/ProfilePage";
 import SearchPage from "./SearchPage/SearchPage";
 import DetailPage from "./DetailPage/DetailPage";
+import EditDetailPage from "./DetailPage/EditDetailPage";
 
-export { HomePage, ListPage, ProfilePage, SearchPage, DetailPage, AddPage };
+export {
+  HomePage,
+  ListPage,
+  ProfilePage,
+  SearchPage,
+  DetailPage,
+  AddPage,
+  EditDetailPage,
+};

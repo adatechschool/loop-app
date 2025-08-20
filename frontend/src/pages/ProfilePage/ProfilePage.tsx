@@ -25,27 +25,23 @@ import { useNavigate } from "react-router-dom";
 import ListCards from "src/components/ListCards/ListCards";
 import useQueryUser from "src/hooks/useQueryUser";
 import useQueryPlaces from "src/hooks/useQueryPlaces";
+import { AuthContext } from "src/contexts/AuthContext";
 
-const ProfilePage = () => {
+const ProfilePage: React.FC = () => {
   const navigate = useNavigate();
   const { user, loading: loadingUser } = useQueryUser();
-  const {
-    places: fetchedPlaces,
-    loading: loadingPlaces,
-    error,
-  } = useQueryPlaces();
+  const { places: fetchedPlaces, loading: loadingPlaces } = useQueryPlaces();
+  const { logout } = React.useContext(AuthContext);
 
   const userPlaces = fetchedPlaces.filter(
     (place) => place.author?.username === user?.username
   );
 
-  console.log("User Places:", userPlaces);
-
   const reverseOrderedPlaces = [...userPlaces].reverse();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
+    logout();
+    navigate("/signin");
   };
 
   return (

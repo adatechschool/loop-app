@@ -1,7 +1,7 @@
 import React from "react";
 import { MapContainerWrapper } from "src/components";
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
   return (
     <div>
       <MapContainerWrapper />

@@ -8,7 +8,6 @@ import {
   Stack,
   Avatar,
   Icon,
-  Text,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
@@ -45,19 +44,19 @@ const LogIn: React.FC = () => {
           <Button
             colorScheme="teal"
             w="full"
-            onClick={() => navigate("/login-form")}
+            onClick={() => navigate("/signin")}
           >
             Se connecter
           </Button>
           <Button
             colorScheme="blue"
             w="full"
-            onClick={() => navigate("/signup-form")}
+            onClick={() => navigate("/signup")}
           >
             Créer un compte
           </Button>
         </Stack>
-        <Text mt={4}>
+        {/* <Text mt={4}>
           <Button
             variant="link"
             colorScheme="teal"
@@ -65,7 +64,7 @@ const LogIn: React.FC = () => {
           >
             Décider plus tard ?
           </Button>
-        </Text>
+        </Text> */}
       </Box>
     </Container>
   );
