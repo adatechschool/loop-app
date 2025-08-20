@@ -7,6 +7,7 @@ import {
   SearchPage,
   ProfilePage,
   DetailPage,
+  EditDetailPage,
 } from "./pages";
 import LogIn from "./pages/LogInPage/LogIn";
 import LoginForm from "./pages/LogInPage/LogInForm";
@@ -44,18 +45,19 @@ const App: React.FC = () => {
                   </PrivateRoute>
                 }
               />
-              <Route path="/search" element={<SearchPage />} />
-              <Route
-                path="/profile"
-                element={
-                  <PrivateRoute>
-                    <ProfilePage />
-                  </PrivateRoute>
-                }
-              />
+
+              <Route path="/edit/:id" element={<EditDetailPage />} />
               <Route path="/places/:id" element={<DetailPage />} />
             </Route>
-
+            <Route path="/search" element={<SearchPage />} />
+            <Route
+              path="/profile"
+              element={
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              }
+            />
             <Route
               path="/settings"
               element={
@@ -75,7 +77,7 @@ const App: React.FC = () => {
                 }
               />
               <Route
-                path="/login-form"
+                path="/signin"
                 element={
                   <PublicRoute>
                     <LoginForm />
@@ -83,7 +85,7 @@ const App: React.FC = () => {
                 }
               />
               <Route
-                path="/signup-form"
+                path="/signup"
                 element={
                   <PublicRoute>
                     <SignUpForm />

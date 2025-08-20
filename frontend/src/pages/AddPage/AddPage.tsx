@@ -2,7 +2,7 @@ import React from "react";
 import { Box, Heading, Flex } from "@chakra-ui/react";
 import FormAddList from "src/components/FormAddList";
 
-const AddPage = () => {
+const AddPage: React.FC = () => {
   return (
     <Box pb="70px">
       <Flex justify="center">

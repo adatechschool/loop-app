@@ -3,17 +3,17 @@ import { Navigate } from "react-router-dom";
 import { AuthContext } from "src/contexts/AuthContext";
 
 interface PublicRouteProps {
-    children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const PublicRoute = ({ children }: PublicRouteProps): JSX.Element => {
-    const { user, loading } = useContext(AuthContext);
+  const { user, loading } = useContext(AuthContext);
 
-    if (loading) {
-        return <div>Loading...</div>; // ou un vrai spinner
-    }
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-    return user ? <Navigate to="/" replace /> : <>{children}</>;
+  return user ? <Navigate to="/" replace /> : <>{children}</>;
 };
 
 export default PublicRoute;

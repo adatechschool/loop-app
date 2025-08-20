@@ -12,12 +12,8 @@ import { IoSearch } from "react-icons/io5";
 import ListCards from "src/components/ListCards/ListCards";
 import useQueryPlaces from "src/hooks/useQueryPlaces";
 
-const SearchPage = () => {
-  const {
-    places: fetchedPlaces,
-    loading: loadingPlaces,
-    error,
-  } = useQueryPlaces();
+const SearchPage: React.FC = () => {
+  const { places: fetchedPlaces, loading: loadingPlaces } = useQueryPlaces();
 
   return (
     <Container p={0} minH={"100vh"}>

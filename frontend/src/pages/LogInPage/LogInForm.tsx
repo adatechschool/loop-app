@@ -17,7 +17,7 @@ import Backbutton from "src/components/BackButton";
 import { InputGroup, InputRightElement, IconButton } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
-const LoginForm = () => {
+const LoginForm: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
@@ -27,7 +27,6 @@ const LoginForm = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,7 +67,6 @@ const LoginForm = () => {
   };
 
   return (
-
     <Container
       p={4}
       minH="100vh"
@@ -80,7 +78,6 @@ const LoginForm = () => {
         <Backbutton />
       </Box>
       <Box w="full" maxW="md" p={6} borderWidth={1} borderRadius="md">
-
         <Heading textAlign="center" mb={6}>
           Connexion
         </Heading>
@@ -101,7 +98,11 @@ const LoginForm = () => {
             />
             <InputRightElement>
               <IconButton
-                aria-label={showPassword ? "Cacher le mot de passe" : "Afficher le mot de passe"}
+                aria-label={
+                  showPassword
+                    ? "Cacher le mot de passe"
+                    : "Afficher le mot de passe"
+                }
                 icon={showPassword ? <ViewOffIcon /> : <ViewIcon />}
                 size="sm"
                 variant="ghost"
