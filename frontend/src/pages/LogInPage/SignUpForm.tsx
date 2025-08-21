@@ -98,7 +98,7 @@ const SignupForm: React.FC = () => {
 
       <Box w="full" maxW="md" p={6} borderWidth={1} borderRadius="md">
         <Heading textAlign="center" mb={6}>
-          Créer un compte
+          Inscription
         </Heading>
         {error && (
           <Box mb={4} color="red.500" textAlign="center">
@@ -134,8 +134,8 @@ const SignupForm: React.FC = () => {
             onChange={(e) => setFile(e.target.files?.[0] || null)}
           />
           {file && <Text>📁 {file.name}</Text>}
-          <Button type="submit" colorScheme="blue" isLoading={loading}>
-            Créer un compte
+          <Button type="submit" colorScheme="gray" isLoading={loading}>
+            S'inscrire
           </Button>
         </Stack>
       </Box>

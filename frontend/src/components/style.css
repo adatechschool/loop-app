@@ -1,0 +1,20 @@
+.install-pwa-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 20px;
+  color: #222;
+  font-weight: bold;
+  cursor: pointer;
+  z-index: 1000;
+  text-decoration: underline;
+  display: inline-block;
+  transition: background 0.2s, color 0.2s;
+  outline: none;
+}
+
+.install-pwa-btn:hover,
+.install-pwa-btn:active,
+.install-pwa-btn:focus {
+  color: #3182ce;
+}
