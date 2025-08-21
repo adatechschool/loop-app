@@ -19,7 +19,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useGeolocationContext } from "src/contexts/GeolocationContext";
 import { AuthContext } from "src/contexts/AuthContext";
 import useGetPlace from "src/hooks/useGetPlace";
-import PORT from "src/utils/constant";
 import axios from "axios";
 
 const FormEditPlace = () => {
@@ -76,9 +75,13 @@ const FormEditPlace = () => {
         // },
       };
 
-      await axios.patch(`http://localhost:${PORT}/api/places/${id}`, payload, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axios.patch(
+        `${process.env.LOOP_API_URL}/api/places/${id}`,
+        payload,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
 
       toast({
         title: "Lieu modifié",

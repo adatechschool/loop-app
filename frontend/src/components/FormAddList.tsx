@@ -22,7 +22,6 @@ import {
 import { FaAccessibleIcon, FaPlus, FaTimes } from "react-icons/fa";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
-import PORT from "src/utils/constant";
 import { useGeolocationContext } from "src/contexts/GeolocationContext";
 import { AuthContext } from "src/contexts/AuthContext";
 
@@ -62,7 +61,7 @@ const FormAddList = () => {
       const imageUrl = uploadRes.data.secure_url;
 
       const imageRes = await axios.post(
-        `http://localhost:${PORT}/api/images`,
+        `${process.env.LOOP_API_URL}/api/images`,
         { url: imageUrl },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -193,7 +192,7 @@ const FormAddList = () => {
       };
 
       try {
-        await axios.post(`http://localhost:${PORT}/api/places`, payload, {
+        await axios.post(`${process.env.LOOP_API_URL}/api/places`, payload, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
