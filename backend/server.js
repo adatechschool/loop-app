@@ -14,8 +14,29 @@ const placeRoutes = require("./routes/placeRoutes");
 const imageRoutes = require("./routes/imageRoutes");
 const PORT = process.env.PORT || 5000;
 
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://loop-dev.netlify.app",
+];
+
 app.use(express.json());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.some(
+          (o) => origin.endsWith(".netlify.app") || o === origin
+        )
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 app.use(
   session({
