@@ -41,11 +41,14 @@ const DetailPage: React.FC = () => {
   const handleDelete = async () => {
     console.log("Frontend deleting ID:", id); // Check this value
     try {
-      await axios.delete(`${process.env.LOOP_API_URL}/api/places/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_LOOP_API_URL}/api/places/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
       navigate("/");
     } catch (err) {
       console.error("Failed to delete place", err);

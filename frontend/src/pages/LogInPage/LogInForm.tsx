@@ -33,7 +33,7 @@ const LoginForm: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${process.env.LOOP_API_URL}/api/login`,
+        `${process.env.REACT_APP_LOOP_API_URL}/api/login`,
         {
           username,
           password,
