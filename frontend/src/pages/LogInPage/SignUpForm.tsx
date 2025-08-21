@@ -48,7 +48,7 @@ const SignupForm: React.FC = () => {
         profilePicture = uploadRes.data.secure_url;
       }
       const response = await axios.post(
-        `${process.env.LOOP_API_URL}/api/signup`,
+        `${process.env.REACT_APP_LOOP_API_URL}/api/signup`,
         {
           name,
           username,

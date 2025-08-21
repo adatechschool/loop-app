@@ -76,7 +76,7 @@ const FormEditPlace = () => {
       };
 
       await axios.patch(
-        `${process.env.LOOP_API_URL}/api/places/${id}`,
+        `${process.env.REACT_APP_LOOP_API_URL}/api/places/${id}`,
         payload,
         {
           headers: { Authorization: `Bearer ${token}` },
