@@ -1,16 +1,8 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  Center,
-  Heading,
-  Container,
-  Stack,
-  Avatar,
-  Icon,
-} from "@chakra-ui/react";
+import { Box, Button, Center, Container, Stack, Image } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
+import InstallPWAButton from "../../components/InstallPWAButton";
+import logo from "../../assets/logo-loop.svg";
 
 const LogIn: React.FC = () => {
   const navigate = useNavigate();
@@ -34,12 +26,8 @@ const LogIn: React.FC = () => {
         boxShadow="md"
       >
         <Center mb={4}>
-          <Avatar size="xl" icon={<Icon as={FaUser} w={8} h={8} />} />
+          <Image src={logo} style={{ width: "80%" }} />
         </Center>
-
-        <Heading fontSize={{ base: "xl", sm: "2xl" }} mb={6}>
-          Bienvenue
-        </Heading>
         <Stack spacing={4}>
           <Button
             colorScheme="teal"
@@ -49,11 +37,11 @@ const LogIn: React.FC = () => {
             Se connecter
           </Button>
           <Button
-            colorScheme="blue"
+            colorScheme="gray"
             w="full"
             onClick={() => navigate("/signup")}
           >
-            Créer un compte
+            S'inscrire
           </Button>
         </Stack>
         {/* <Text mt={4}>
@@ -66,6 +54,7 @@ const LogIn: React.FC = () => {
           </Button>
         </Text> */}
       </Box>
+      <InstallPWAButton />
     </Container>
   );
 };

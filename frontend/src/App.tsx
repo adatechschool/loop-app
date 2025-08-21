@@ -48,16 +48,17 @@ const App: React.FC = () => {
 
               <Route path="/edit/:id" element={<EditDetailPage />} />
               <Route path="/places/:id" element={<DetailPage />} />
+              <Route path="/search" element={<SearchPage />} />
+              <Route
+                path="/profile"
+                element={
+                  <PrivateRoute>
+                    <ProfilePage />
+                  </PrivateRoute>
+                }
+              />
             </Route>
-            <Route path="/search" element={<SearchPage />} />
-            <Route
-              path="/profile"
-              element={
-                <PrivateRoute>
-                  <ProfilePage />
-                </PrivateRoute>
-              }
-            />
+
             <Route
               path="/settings"
               element={
