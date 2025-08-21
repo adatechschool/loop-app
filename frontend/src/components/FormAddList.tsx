@@ -61,7 +61,7 @@ const FormAddList = () => {
       const imageUrl = uploadRes.data.secure_url;
 
       const imageRes = await axios.post(
-        `${process.env.LOOP_API_URL}/api/images`,
+        `${process.env.REACT_APP_LOOP_API_URL}/api/images`,
         { url: imageUrl },
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -192,11 +192,15 @@ const FormAddList = () => {
       };
 
       try {
-        await axios.post(`${process.env.LOOP_API_URL}/api/places`, payload, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        await axios.post(
+          `${process.env.REACT_APP_LOOP_API_URL}/api/places`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
         setLoading(true);
         navigate("/places");
       } catch (error: any) {
