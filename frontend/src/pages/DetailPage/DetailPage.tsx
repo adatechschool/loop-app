@@ -22,7 +22,6 @@ import useGetPlace from "src/hooks/useGetPlace";
 import Backbutton from "src/components/BackButton";
 import { AuthContext } from "src/contexts/AuthContext";
 import { TAG_TYPE_PLACES_COLORS } from "src/utils/constant";
-import PORT from "src/utils/constant";
 import axios from "axios";
 
 const DetailPage: React.FC = () => {
@@ -42,7 +41,7 @@ const DetailPage: React.FC = () => {
   const handleDelete = async () => {
     console.log("Frontend deleting ID:", id); // Check this value
     try {
-      await axios.delete(`http://localhost:${PORT}/api/places/${id}`, {
+      await axios.delete(`${process.env.LOOP_API_URL}/api/places/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

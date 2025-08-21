@@ -12,7 +12,6 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "src/contexts/AuthContext";
-import PORT from "src/utils/constant";
 import Backbutton from "src/components/BackButton";
 import { InputGroup, InputRightElement, IconButton } from "@chakra-ui/react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
@@ -33,10 +32,13 @@ const LoginForm: React.FC = () => {
     setErrorMessage("");
 
     try {
-      const response = await axios.post(`http://localhost:${PORT}/api/login`, {
-        username,
-        password,
-      });
+      const response = await axios.post(
+        `${process.env.LOOP_API_URL}/api/login`,
+        {
+          username,
+          password,
+        }
+      );
       const { token } = response.data;
       login(token);
 

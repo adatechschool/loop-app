@@ -12,7 +12,6 @@ import {
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import BackButton from "src/components/BackButton";
-import PORT from "src/utils/constant";
 
 const SignupForm: React.FC = () => {
   const [name, setName] = useState("");
@@ -48,14 +47,17 @@ const SignupForm: React.FC = () => {
         );
         profilePicture = uploadRes.data.secure_url;
       }
-      const response = await axios.post(`http://localhost:${PORT}/api/signup`, {
-        name,
-        username,
-        email,
-        password,
-        role: "user",
-        profilePicture: profilePicture || "",
-      });
+      const response = await axios.post(
+        `${process.env.LOOP_API_URL}/api/signup`,
+        {
+          name,
+          username,
+          email,
+          password,
+          role: "user",
+          profilePicture: profilePicture || "",
+        }
+      );
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _ } = response.data;
