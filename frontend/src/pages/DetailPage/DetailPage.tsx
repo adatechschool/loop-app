@@ -15,7 +15,6 @@ const DetailPage: React.FC = () => {
   if (!id) {
     return (
       <Box textAlign="center" mt="10">
-
         <Text fontSize="xl" color="red.500">
           Invalid place ID
         </Text>
@@ -48,11 +47,12 @@ const DetailPage: React.FC = () => {
   }
 
   return (
-    <Box maxW="lg" mx="auto" p="4" position='relative'>
+    <Box maxW="lg" mx="auto" p="4" position="relative">
       <Box position="absolute" top="4" left="4" zIndex="10">
         <Backbutton />
       </Box>
       <Box mt="16"></Box>
+
       <ImageCarousel
         images={place.images?.map((img: any) => img.image?.url)}
         title={place.name}
@@ -67,7 +67,15 @@ const DetailPage: React.FC = () => {
         >
           Voir sur la map
         </Button>
-        <LikeButton title={undefined} />
+
+        {/* ✅ Correction : LikeButton doit recevoir une string pour title */}
+        <LikeButton
+          title={place.name || "Unknown Place"}
+          isFavorite={false} // tu pourras brancher useFavorites ici
+          onClick={() => {
+            console.log("Ajout/suppression favori pour", id);
+          }}
+        />
       </Flex>
 
       <Text fontWeight="bold" fontSize="3xl" mb="4" mt="6" textAlign="left">

@@ -92,6 +92,8 @@ model Favorite {
   placeId   String
   place     Place    @relation(fields: [placeId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, placeId]) 
 }
 
 model Image {

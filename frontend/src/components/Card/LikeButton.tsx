@@ -3,16 +3,12 @@ import { IconButton, useToast } from "@chakra-ui/react";
 import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 
 interface LikeButtonProps {
-  title: string | undefined;
-  onAddToFavorites?: (name: string) => void;
+  title: string;
   isFavorite?: boolean;
+  onClick?: () => void; // 🔹 renommé depuis onAddToFavorites
 }
 
-const LikeButton: React.FC<LikeButtonProps> = ({
-  title,
-  onAddToFavorites,
-  isFavorite,
-}) => {
+const LikeButton: React.FC<LikeButtonProps> = ({ title, isFavorite, onClick }) => {
   const [favorite, setFavorite] = useState(isFavorite);
   const toast = useToast();
   const token = localStorage.getItem("token");
@@ -26,21 +22,21 @@ const LikeButton: React.FC<LikeButtonProps> = ({
     setFavorite((prev) => {
       const newFavoriteStatus = !prev;
       toast({
-        title: newFavoriteStatus
-          ? "Added to Favorites"
-          : "Removed from Favorites",
-        description: `"${title}" has been ${
-          newFavoriteStatus ? "added to" : "removed from"
-        } your favorites.`,
+        title: newFavoriteStatus ? "Added to Favorites" : "Removed from Favorites",
+        description: `"${title}" has been ${newFavoriteStatus ? "added to" : "removed from"} your favorites.`,
         status: newFavoriteStatus ? "success" : "info",
         duration: 1500,
         isClosable: true,
       });
 
+      if (onClick) onClick(); // 🔹 appelle le callback du parent
       return newFavoriteStatus;
     });
   };
-  return !token ? null : (
+
+  if (!token) return null;
+
+  return (
     <IconButton
       ml={2}
       aria-label="Add to Favorites"
@@ -51,3 +47,5 @@ const LikeButton: React.FC<LikeButtonProps> = ({
 };
 
 export default LikeButton;
+
+

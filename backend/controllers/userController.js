@@ -53,3 +53,88 @@ exports.deleteUser = async (req, res) => {
       .json({ message: "Erreur lors de la suppression du compte" });
   }
 };
+
+exports.getUserFavorites = async (req, res) => {
+  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const favorites = await prisma.favorite.findMany({
+      where: { userId: req.user.id },
+      include: {
+        place: {
+          include: {
+            types: true,
+            images: { include: { image: true } },
+            geo: true,
+            author: true,
+          },
+        },
+      },
+    });
+
+    const favoritePlaces = favorites.map((fav) => fav.place);
+
+    res.status(200).json({
+      success: true,
+      message: "User favorites fetched successfully",
+      favorites: favoritePlaces,
+    });
+  } catch (error) {
+    console.error("Error fetching favorites:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error fetching favorites" });
+  }
+};
+
+// 🔹 Ajouter un favori
+exports.addFavorite = async (req, res) => {
+  const { userId, placeId } = req.body;
+
+  try {
+    // Vérifie si le favori existe déjà
+    const existing = await prisma.favorite.findFirst({
+      where: {
+        userId,
+        placeId,
+      },
+    });
+
+    if (existing) {
+      return res.status(400).json({ message: "Ce favori existe déjà." });
+    }
+
+    // Crée le favori
+    const favorite = await prisma.favorite.create({
+      data: {
+        userId,
+        placeId,
+      },
+    });
+
+    res.status(201).json(favorite);
+  } catch (error) {
+    console.error("Error adding favorite:", error);
+    res.status(500).json({ message: "Erreur lors de l'ajout du favori." });
+  }
+};
+
+exports.removeFavorite = async (req, res) => {
+  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+  const { placeId } = req.params;
+
+  try {
+    await prisma.favorite.delete({
+      where: { userId_placeId: { userId: req.user.id, placeId } },
+    });
+
+    res
+      .status(200)
+      .json({ success: true, message: "Place removed from favorites" });
+  } catch (error) {
+    console.error("Error removing favorite:", error);
+    res
+      .status(500)
+      .json({ success: false, message: "Error removing favorite" });
+  }
+};

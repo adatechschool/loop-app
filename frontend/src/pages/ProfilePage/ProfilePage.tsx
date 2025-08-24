@@ -25,6 +25,7 @@ import { useNavigate } from "react-router-dom";
 import ListCards from "src/components/ListCards/ListCards";
 import useQueryUser from "src/hooks/useQueryUser";
 import useQueryPlaces from "src/hooks/useQueryPlaces";
+import useFavorites from "src/hooks/useFavorites";
 
 const ProfilePage = () => {
   const navigate = useNavigate();
@@ -32,15 +33,13 @@ const ProfilePage = () => {
   const {
     places: fetchedPlaces,
     loading: loadingPlaces,
-    error,
   } = useQueryPlaces();
+  const { favorites, loading: loadingFavorites } = useFavorites();
 
+  // lieux créés par l'utilisateur connecté
   const userPlaces = fetchedPlaces.filter(
     (place) => place.author?.username === user?.username
   );
-
-  console.log("User Places:", userPlaces);
-
   const reverseOrderedPlaces = [...userPlaces].reverse();
 
   const handleLogout = () => {
@@ -50,6 +49,7 @@ const ProfilePage = () => {
 
   return (
     <Container p={0} minH="100vh">
+      {/* Menu en haut à droite */}
       <Stack p={4} w="full" maxW="md">
         <Container display="flex" justifyContent="flex-end">
           <Menu>
@@ -69,6 +69,7 @@ const ProfilePage = () => {
           </Menu>
         </Container>
 
+        {/* Profil utilisateur */}
         <Center>
           <Box maxW="320px" w="full" p={6} textAlign="center">
             {loadingUser ? (
@@ -91,6 +92,7 @@ const ProfilePage = () => {
         </Center>
       </Stack>
 
+      {/* Onglets : Mes lieux / Favoris */}
       <Tabs variant="soft-rounded" colorScheme="teal" p={4} w="full" maxW="md">
         <TabList>
           <Tab>Mes Lieux</Tab>
@@ -98,8 +100,11 @@ const ProfilePage = () => {
         </TabList>
 
         <TabPanels>
+          {/* Onglet Mes Lieux */}
           <TabPanel>
-            {userPlaces[0] ? (
+            {loadingPlaces ? (
+              <Text textAlign="center">Chargement...</Text>
+            ) : userPlaces.length > 0 ? (
               <ListCards
                 places={reverseOrderedPlaces}
                 loading={loadingPlaces}
@@ -111,10 +116,22 @@ const ProfilePage = () => {
               </Center>
             )}
           </TabPanel>
+
+          {/* Onglet Mes Favoris */}
           <TabPanel>
-            <Text textAlign="center" color="gray.500">
-              Aucun favori ajouté.
-            </Text>
+            {loadingFavorites ? (
+              <Text textAlign="center">Chargement des favoris...</Text>
+            ) : favorites.length > 0 ? (
+              <ListCards
+                places={favorites} // ✅ on affiche directement les lieux favoris
+                loading={loadingFavorites}
+                userAvatar={user?.profilePicture}
+              />
+            ) : (
+              <Center>
+                <Text>Aucun favori ajouté.</Text>
+              </Center>
+            )}
           </TabPanel>
         </TabPanels>
       </Tabs>

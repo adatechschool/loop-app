@@ -66,9 +66,9 @@ exports.getAllPlaces = async (req, res) => {
         types: true,
         images: { include: { image: true } },
         geo: true,
-        author: true
+        author: true,
       },
-    })
+    });
 
     res.status(200).json({
       success: true,
@@ -106,13 +106,12 @@ exports.getPlaceById = async (req, res) => {
       place,
     });
   } catch (error) {
-  console.error("Error fetching place:", error);
-  res.status(500).json({
-    success: false,
-    message: "Error fetching place",
-    error: error.message,
-    stack: error.stack, // pour debugger
-  });
-}
+    console.error("Error fetching place:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error fetching place",
+      error: error.message,
+      stack: error.stack, // pour debugger
+    });
+  }
 };
-

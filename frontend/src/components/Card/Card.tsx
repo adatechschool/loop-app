@@ -16,11 +16,10 @@ export interface CardProps {
   title: string | undefined;
   description: string | undefined;
   username: string | undefined;
-  userAvatar?: string; // New prop for avatar
-  onSeeMore?: (title: string) => void;
-  onAddToFavorites?: (title: string) => void;
-  isFavorite?: boolean;
+  userAvatar?: string;
   onClick?: () => void;
+  isFavorite?: boolean;          // état du favori
+  onFavoriteClick?: (name: string) => void;  // action au clic sur le favori
 }
 
 const Card: React.FC<CardProps> = ({
@@ -30,8 +29,11 @@ const Card: React.FC<CardProps> = ({
   username,
   userAvatar,
   onClick,
+  isFavorite,
+  onFavoriteClick,
 }) => {
   const isMobile = useBreakpointValue({ base: true, md: false });
+
   return (
     <Box
       maxW="sm"
@@ -60,12 +62,20 @@ const Card: React.FC<CardProps> = ({
       </VStack>
 
       <Flex justifyContent="space-between" p="4" alignItems="center">
-        <LikeButton title={title} />
+        {title && (
+          <LikeButton
+            title={title!}                 // title est requis
+            isFavorite={isFavorite}
+            onClick={() => onFavoriteClick && onFavoriteClick(title!)} // fonctionne parfaitement
+          />
+        )}
+
         {!isMobile && (
           <Button
             colorScheme="teal"
             onClick={(e) => {
               e.stopPropagation();
+              if (onClick) onClick();
             }}
           >
             See More
