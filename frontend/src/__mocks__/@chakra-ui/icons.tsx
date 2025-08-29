@@ -13,3 +13,11 @@ export const DeleteIcon = (props: any) => (
 export const HamburgerIcon = (props: any) => (
   <span data-testid="hamburger-icon" {...props}>☰</span>
 );
+
+export const ViewIcon = (props: any) => (
+  <span data-testid="view-icon" {...props}>👁️</span>
+);
+
+export const ViewOffIcon = (props: any) => (
+  <span data-testid="view-off-icon" {...props}>🙈</span>
+);

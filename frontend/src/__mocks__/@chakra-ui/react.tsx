@@ -196,6 +196,18 @@ export const FormErrorMessage = ({ children, ...props }: any) => (
   <div data-testid="chakra-form-error" {...props}>{children}</div>
 );
 
+export const InputGroup = ({ children, ...props }: any) => (
+  <div data-testid="chakra-input-group" {...props}>{children}</div>
+);
+
+export const InputRightElement = ({ children, ...props }: any) => (
+  <div data-testid="chakra-input-right-element" {...props}>{children}</div>
+);
+
+export const CircularProgress = (props: any) => (
+  <div data-testid="chakra-circular-progress" {...props} />
+);
+
 // Default export for ChakraProvider
 const ChakraProvider = ({ children }: { children: React.ReactNode }) => (
   <div data-testid="chakra-provider">{children}</div>
