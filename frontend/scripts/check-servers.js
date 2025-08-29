@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+const https = require('https');
 const http = require('http');
 const { spawn } = require('child_process');
 
@@ -22,13 +23,15 @@ function checkServer(url, name) {
     const urlObj = new URL(url);
     const options = {
       hostname: urlObj.hostname,
-      port: urlObj.port,
+      port: urlObj.port || (urlObj.protocol === 'https:' ? 443 : 80),
       path: urlObj.pathname,
       method: 'GET',
-      timeout: 2000
+      timeout: 5000
     };
 
-    const req = http.request(options, (res) => {
+    const requestModule = urlObj.protocol === 'https:' ? https : http;
+
+    const req = requestModule.request(options, (res) => {
       resolve({ name, url, running: true, status: res.statusCode });
     });
 
@@ -46,12 +49,12 @@ function checkServer(url, name) {
 }
 
 async function main() {
-  colorLog('\n🔍 Checking Loop App Servers...', colors.blue + colors.bold);
+  colorLog('\n🔍 Checking Loop App Deployed Servers...', colors.blue + colors.bold);
   console.log('');
 
   const checks = await Promise.all([
-    checkServer('http://localhost:3000', 'Frontend (React)'),
-    checkServer('http://localhost:5000/api', 'Backend (API)')
+    checkServer('https://loop-dev.netlify.app/', 'Frontend (Netlify)'),
+    checkServer('https://loop-backend-rl4o.onrender.com/api', 'Backend (Render)')
   ]);
 
   let allRunning = true;
@@ -71,29 +74,22 @@ async function main() {
   console.log('');
 
   if (allRunning) {
-    colorLog('🎉 All servers are running! You can now run Cypress tests.', colors.green + colors.bold);
+    colorLog('🎉 All deployed servers are running! You can now run Cypress tests.', colors.green + colors.bold);
     console.log('');
     colorLog('Run tests with:', colors.blue);
     colorLog('  npm run test:e2e:dev    # Interactive mode', colors.reset);
     colorLog('  npm run test:e2e        # Headless mode', colors.reset);
   } else {
-    colorLog('⚠️  Some servers are not running. Start them first:', colors.yellow + colors.bold);
+    colorLog('⚠️  Some deployed servers are not responding.', colors.yellow + colors.bold);
     console.log('');
-    
-    if (!checks[1].running) {
-      colorLog('Start Backend Server (Terminal 1):', colors.blue);
-      colorLog('  cd backend && npm run dev', colors.reset);
-      console.log('');
-    }
-    
-    if (!checks[0].running) {
-      colorLog('Start Frontend Server (Terminal 2):', colors.blue);
-      colorLog('  cd frontend && npm start', colors.reset);
-      console.log('');
-    }
-    
-    colorLog('Then run this script again to verify:', colors.blue);
-    colorLog('  npm run check:servers', colors.reset);
+    colorLog('This might be due to:', colors.blue);
+    colorLog('  • Temporary server downtime on Render/Netlify', colors.reset);
+    colorLog('  • Network connectivity issues', colors.reset);
+    colorLog('  • Server cold start (Render free tier)', colors.reset);
+    console.log('');
+    colorLog('Please wait a moment and try again, or check:', colors.blue);
+    colorLog('  • Frontend: https://loop-dev.netlify.app/', colors.reset);
+    colorLog('  • Backend: https://loop-backend-rl4o.onrender.com/api', colors.reset);
   }
 
   console.log('');

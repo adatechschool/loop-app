@@ -10,30 +10,21 @@ This directory contains comprehensive end-to-end tests for the Loop application 
 - PostgreSQL database set up and running
 - Environment variables configured (.env files)
 
-### ⚠️ IMPORTANT: Start Servers Before Testing
+### ⚠️ IMPORTANT: Deployed Server Configuration
 
-**You must have both servers running before starting Cypress tests:**
+**The Cypress tests are configured to run against the deployed Loop application:**
 
-1. **Start Backend Server** (Terminal 1):
-   ```bash
-   cd backend
-   npm run dev
-   ```
-   ✅ Backend running on http://localhost:5000
+- **Frontend (Netlify)**: https://loop-dev.netlify.app/
+- **Backend (Render)**: https://loop-backend-rl4o.onrender.com
 
-2. **Start Frontend Server** (Terminal 2):
-   ```bash
-   cd frontend
-   npm start
-   ```
-   ✅ Frontend running on http://localhost:3000
+**Verify servers are accessible:**
+```bash
+cd frontend
+npm run check:servers
+```
+This script will check if both deployed servers are responding and provide helpful information about any issues.
 
-3. **Verify servers are running:**
-   ```bash
-   cd frontend
-   npm run check:servers
-   ```
-   This script will check if both servers are running and provide helpful instructions.
+> **Note**: Render free tier servers may experience cold starts (taking 30-60 seconds to respond initially). If the server check fails, wait a moment and try again.
 
 ### Installation
 ```bash
@@ -43,14 +34,14 @@ npm install
 
 ### Running Tests
 
-**⚠️ Make sure both servers are running first (see above)**
+**⚠️ Tests run against deployed servers (no local setup required)**
 
 #### Quick Server Check
 ```bash
 cd frontend
 npm run check:servers
 ```
-This will verify both servers are running before you start testing.
+This will verify both deployed servers are responding before you start testing.
 
 #### Interactive Mode (Development)
 ```bash
@@ -206,19 +197,19 @@ const testUser = {
 ### Cypress Configuration (`cypress.config.js`)
 ```javascript
 {
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'https://loop-dev.netlify.app/',
   viewportWidth: 1280,
   viewportHeight: 720,
   defaultCommandTimeout: 10000,
   env: {
-    apiUrl: 'http://localhost:5000/api'
+    apiUrl: 'https://loop-backend-rl4o.onrender.com/api'
   }
 }
 ```
 
 ### Environment Variables
-- `CYPRESS_baseUrl`: Frontend application URL
-- `CYPRESS_apiUrl`: Backend API URL
+- `CYPRESS_baseUrl`: Frontend application URL (Netlify deployment)
+- `CYPRESS_apiUrl`: Backend API URL (Render deployment)
 
 ## 🚦 Running in CI/CD
 
@@ -226,11 +217,10 @@ const testUser = {
 ```yaml
 - name: Run Cypress Tests
   run: |
-    npm run build
     npm run test:e2e
   env:
-    CYPRESS_baseUrl: http://localhost:3000
-    CYPRESS_apiUrl: http://localhost:5000/api
+    CYPRESS_baseUrl: https://loop-dev.netlify.app/
+    CYPRESS_apiUrl: https://loop-backend-rl4o.onrender.com/api
 ```
 
 ### Test Reports

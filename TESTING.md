@@ -103,46 +103,33 @@ cypress/
 
 ## Running Tests
 
-### ⚠️ Prerequisites: Start Application Servers
+### ⚠️ Configuration: Deployed Server Testing
 
-**Before running any Cypress tests, you MUST have both servers running:**
+**The tests are configured to run against the deployed Loop application:**
 
-1. **Backend Server** (Terminal 1):
-   ```bash
-   cd backend
-   npm run dev
-   ```
-   Backend runs on http://localhost:5000
+- **Frontend (Netlify)**: https://loop-dev.netlify.app/
+- **Backend (Render)**: https://loop-backend-rl4o.onrender.com
 
-2. **Frontend Server** (Terminal 2):
-   ```bash
-   cd frontend
-   npm start
-   ```
-   Frontend runs on http://localhost:3000
+> **No local server setup required!** Tests run directly against the deployed application.
 
-### Common Error Fix
+### Server Status Verification
 
-If you see this error:
-```
-Cypress could not verify that this server is running: http://localhost:3000
-```
-
-This means the React frontend server is not running. Start it with:
-```bash
-cd frontend
-npm start
-```
-
-### Quick Server Status Check
-
-Use the helper script to check if both servers are running:
+Use the helper script to check if both deployed servers are responding:
 ```bash
 cd frontend
 npm run check:servers
 ```
 
-This will show you which servers are running and provide instructions for starting missing ones.
+This will verify connectivity to both the Netlify frontend and Render backend.
+
+### Common Issues and Solutions
+
+**If server check fails:**
+- **Render Cold Start**: Free tier servers may take 30-60 seconds to wake up
+- **Temporary Outages**: Cloud services occasionally experience brief downtime
+- **Network Issues**: Check your internet connection
+
+**Wait and retry:** Most issues resolve automatically within a few minutes.
 
 ### Development Mode (Interactive)
 ```bash
@@ -192,11 +179,11 @@ The project includes a comprehensive GitHub Actions workflow that:
 ### Test Environment Configuration
 ```yaml
 Environment Variables:
-  - CYPRESS_baseUrl: http://localhost:3000
-  - CYPRESS_apiUrl: http://localhost:5000/api
-  - DATABASE_URL: postgresql://postgres:postgres@localhost:5432/loop_test
-  - JWT_SECRET: test-secret-key
+  - CYPRESS_baseUrl: https://loop-dev.netlify.app/
+  - CYPRESS_apiUrl: https://loop-backend-rl4o.onrender.com/api
 ```
+
+> **Note**: Database and JWT configurations are handled by the deployed backend service.
 
 ## Test Data and Fixtures
 

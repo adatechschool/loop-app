@@ -2,7 +2,7 @@ const { defineConfig } = require('cypress')
 
 module.exports = defineConfig({
   e2e: {
-    baseUrl: 'http://localhost:3000',
+    baseUrl: 'https://loop-dev.netlify.app/',
     viewportWidth: 1280,
     viewportHeight: 720,
     supportFile: 'cypress/support/e2e.js',
@@ -16,7 +16,7 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
     env: {
-      apiUrl: 'http://localhost:5000/api'
+      apiUrl: 'https://loop-backend-rl4o.onrender.com/api'
     }
   },
   component: {
