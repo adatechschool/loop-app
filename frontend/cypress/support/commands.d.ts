@@ -11,6 +11,12 @@ declare namespace Cypress {
     login(username: string, password: string): Chainable<void>
 
     /**
+     * Custom command to login with existing user credentials from environment
+     * @example cy.loginWithExistingUser()
+     */
+    loginWithExistingUser(): Chainable<void>
+
+    /**
      * Custom command to signup new user
      * @param userData - User registration data
      * @example cy.signup({ name: 'John', username: 'john', email: 'john@example.com', password: 'pass' })

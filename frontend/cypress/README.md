@@ -91,6 +91,37 @@ cypress/
 └── component/                   # Component tests (future)
 ```
 
+## 🔐 Authentication Options
+
+### Using Existing User Accounts
+
+For testing against the deployed environment, you can use existing user accounts:
+
+1. **Default Configuration**: The tests are pre-configured with existing user credentials
+2. **Environment Variables**: For security, you can override credentials using environment variables:
+   ```bash
+   export CYPRESS_EXISTING_USER_USERNAME="your_username"
+   export CYPRESS_EXISTING_USER_PASSWORD="your_password"
+   ```
+
+3. **Custom Command**: Use the `loginWithExistingUser()` command in tests:
+   ```javascript
+   it('should test with existing user', () => {
+     cy.loginWithExistingUser()  // Uses configured credentials
+     // ... rest of test
+   })
+   ```
+
+### Dynamic Test User Creation
+
+For isolated testing, the suite also supports creating temporary test users:
+```javascript
+cy.createTestUser().then(user => {
+  cy.login(user.username, user.password)
+  // ... test with temporary user
+})
+```
+
 ## 🧪 Test Categories
 
 ### 1. Authentication Tests (`auth/authentication.cy.js`)

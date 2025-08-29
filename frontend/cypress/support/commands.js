@@ -12,6 +12,12 @@ Cypress.Commands.add('login', (username, password) => {
   })
 })
 
+// Custom command for login with existing user credentials
+Cypress.Commands.add('loginWithExistingUser', () => {
+  const existingUser = Cypress.env('existingUser')
+  cy.login(existingUser.username, existingUser.password)
+})
+
 // Custom command for user signup
 Cypress.Commands.add('signup', (userData) => {
   cy.visit('/signup')

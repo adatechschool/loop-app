@@ -16,7 +16,12 @@ module.exports = defineConfig({
       // implement node event listeners here
     },
     env: {
-      apiUrl: 'https://loop-backend-rl4o.onrender.com/api'
+      apiUrl: 'https://loop-backend-rl4o.onrender.com/api',
+      // Optional existing user credentials for testing (use environment variables for security)
+      existingUser: {
+        username: Cypress.env('EXISTING_USER_USERNAME') || 'cpelerin1',
+        password: Cypress.env('EXISTING_USER_PASSWORD') || 'xniw006'
+      }
     }
   },
   component: {

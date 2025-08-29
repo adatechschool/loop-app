@@ -85,10 +85,28 @@ cypress/
 
 #### Custom Commands
 - `cy.login()` - Authenticated session management
+- `cy.loginWithExistingUser()` - Login with pre-configured credentials
 - `cy.signup()` - User registration
 - `cy.addPlace()` - Place creation
 - `cy.waitForMap()` - Map loading synchronization
 - `cy.cleanupTestData()` - Test data cleanup
+
+#### Authentication Options
+
+**Existing User Credentials**
+The test suite is configured to use existing user credentials for testing against the deployed application:
+- Default credentials are pre-configured for immediate testing
+- Environment variables can override defaults for security:
+  ```bash
+  export CYPRESS_EXISTING_USER_USERNAME="your_username"
+  export CYPRESS_EXISTING_USER_PASSWORD="your_password"
+  ```
+
+**Dynamic Test Users**
+For isolated testing scenarios:
+- Automatically generated users with unique timestamps
+- Prevents conflicts in multi-user testing environments
+- Temporary accounts that don't affect production data
 
 #### Test Data Management
 - JSON fixtures for consistent test data
