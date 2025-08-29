@@ -6,6 +6,7 @@
     "-": "^0.0.1",
     "@chakra-ui/icons": "^2.2.4",
     "@chakra-ui/react": "^2.10.3",
+    "@chakra-ui/utils": "^2.2.5",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@testing-library/jest-dom": "^5.17.0",
@@ -52,6 +53,16 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!(react-leaflet|@react-leaflet|axios)/)"
+    ],
+    "moduleNameMapper": {
+      "\\.(css|less|scss|sass)$": "identity-obj-proxy",
+      "^leaflet$": "<rootDir>/src/__mocks__/leaflet.ts",
+      "^react-leaflet$": "<rootDir>/src/__mocks__/react-leaflet.tsx"
+    }
+  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -69,5 +80,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "identity-obj-proxy": "^3.0.0"
   }
 }
