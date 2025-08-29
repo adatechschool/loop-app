@@ -50,7 +50,14 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "cypress:run:headless": "cypress run --headless",
+    "test:e2e": "cypress run --headless",
+    "test:e2e:dev": "cypress open",
+    "test:component": "cypress run --component",
+    "test:component:dev": "cypress open --component"
   },
   "eslintConfig": {
     "extends": [
@@ -69,5 +76,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "cypress": "^15.0.0"
   }
 }

@@ -1,0 +1,36 @@
+{
+  "validUser": {
+    "name": "Test User",
+    "username": "testuser",
+    "email": "test@example.com",
+    "password": "testpassword123"
+  },
+  "adminUser": {
+    "name": "Admin User",
+    "username": "admin",
+    "email": "admin@example.com",
+    "password": "adminpassword123"
+  },
+  "invalidUser": {
+    "username": "nonexistent",
+    "password": "wrongpassword"
+  },
+  "newUser": {
+    "name": "New Test User",
+    "username": "newuser",
+    "email": "newuser@example.com",
+    "password": "newpassword123"
+  },
+  "userWithWeakPassword": {
+    "name": "Weak Password User",
+    "username": "weakuser",
+    "email": "weak@example.com",
+    "password": "123"
+  },
+  "userWithInvalidEmail": {
+    "name": "Invalid Email User",
+    "username": "invaliduser",
+    "email": "invalid-email",
+    "password": "validpassword123"
+  }
+}

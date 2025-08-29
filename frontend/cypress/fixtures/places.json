@@ -1,0 +1,42 @@
+{
+  "validPlace": {
+    "name": "Test Place",
+    "description": "This is a test place for Cypress testing",
+    "address": "123 Test Street, Test City, 75001 Paris",
+    "types": ["street_art", "monument"],
+    "accessibility": true,
+    "geo": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    }
+  },
+  "placeWithImages": {
+    "name": "Place with Images",
+    "description": "Test place with multiple images",
+    "address": "456 Image Street, Paris",
+    "types": ["park"],
+    "accessibility": true,
+    "images": ["cypress/fixtures/test-image.jpg"]
+  },
+  "minimalPlace": {
+    "name": "Minimal Test Place",
+    "description": "Minimal place data",
+    "address": "789 Minimal St, Paris"
+  },
+  "placeWithLongDescription": {
+    "name": "Place with Long Description",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "address": "Long Description Street, Paris",
+    "types": ["museum", "monument"]
+  },
+  "invalidPlace": {
+    "name": "",
+    "description": "",
+    "address": ""
+  },
+  "searchTerms": {
+    "existing": "Canal",
+    "nonExisting": "NonExistentPlace",
+    "partial": "Street"
+  }
+}
