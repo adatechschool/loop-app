@@ -7,8 +7,33 @@ This directory contains comprehensive end-to-end tests for the Loop application 
 ### Prerequisites
 - Node.js (v14 or higher)
 - npm or yarn
-- Loop application backend running on http://localhost:5000
-- Loop application frontend running on http://localhost:3000
+- PostgreSQL database set up and running
+- Environment variables configured (.env files)
+
+### ⚠️ IMPORTANT: Start Servers Before Testing
+
+**You must have both servers running before starting Cypress tests:**
+
+1. **Start Backend Server** (Terminal 1):
+   ```bash
+   cd backend
+   npm run dev
+   ```
+   ✅ Backend running on http://localhost:5000
+
+2. **Start Frontend Server** (Terminal 2):
+   ```bash
+   cd frontend
+   npm start
+   ```
+   ✅ Frontend running on http://localhost:3000
+
+3. **Verify servers are running:**
+   ```bash
+   cd frontend
+   npm run check:servers
+   ```
+   This script will check if both servers are running and provide helpful instructions.
 
 ### Installation
 ```bash
@@ -17,6 +42,15 @@ npm install
 ```
 
 ### Running Tests
+
+**⚠️ Make sure both servers are running first (see above)**
+
+#### Quick Server Check
+```bash
+cd frontend
+npm run check:servers
+```
+This will verify both servers are running before you start testing.
 
 #### Interactive Mode (Development)
 ```bash

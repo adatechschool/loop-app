@@ -103,6 +103,47 @@ cypress/
 
 ## Running Tests
 
+### ⚠️ Prerequisites: Start Application Servers
+
+**Before running any Cypress tests, you MUST have both servers running:**
+
+1. **Backend Server** (Terminal 1):
+   ```bash
+   cd backend
+   npm run dev
+   ```
+   Backend runs on http://localhost:5000
+
+2. **Frontend Server** (Terminal 2):
+   ```bash
+   cd frontend
+   npm start
+   ```
+   Frontend runs on http://localhost:3000
+
+### Common Error Fix
+
+If you see this error:
+```
+Cypress could not verify that this server is running: http://localhost:3000
+```
+
+This means the React frontend server is not running. Start it with:
+```bash
+cd frontend
+npm start
+```
+
+### Quick Server Status Check
+
+Use the helper script to check if both servers are running:
+```bash
+cd frontend
+npm run check:servers
+```
+
+This will show you which servers are running and provide instructions for starting missing ones.
+
 ### Development Mode (Interactive)
 ```bash
 cd frontend

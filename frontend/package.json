@@ -57,7 +57,9 @@
     "test:e2e": "cypress run --headless",
     "test:e2e:dev": "cypress open",
     "test:component": "cypress run --component",
-    "test:component:dev": "cypress open --component"
+    "test:component:dev": "cypress open --component",
+    "check:servers": "node scripts/check-servers.js",
+    "pre:test": "npm run check:servers"
   },
   "eslintConfig": {
     "extends": [
