@@ -10,7 +10,7 @@ describe('Tests CRUD des lieux', () => {
   // Helper function to login before testing places
   const loginAsValidUser = function() {
     cy.get('@users').then((users) => {
-      cy.login(users.validUser.username, users.validUser.password)
+      cy.login(users.adminUser.username, users.adminUser.password)
       cy.url().should('include', '/')
       cy.window().then((window) => {
         const token = window.localStorage.getItem('token')

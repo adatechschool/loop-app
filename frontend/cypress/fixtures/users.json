@@ -4,6 +4,10 @@
     "email": "martine_carre@gmail.com",
     "password": "password123"
   },
+  "adminUser": {
+    "username": "admin_changed",
+    "password": "adminloop123"
+  },
   "invalidUser": {
     "username": "utilisateur_inexistant",
     "password": "mot_de_passe_incorrect"
