@@ -1,0 +1,25 @@
+{
+  "validUser": {
+    "username": "mcarre",
+    "email": "martine_carre@gmail.com",
+    "password": "password123"
+  },
+  "invalidUser": {
+    "username": "utilisateur_inexistant",
+    "password": "mot_de_passe_incorrect"
+  },
+  "testUsers": [
+    {
+      "username": "mcarre",
+      "email": "martine_carre@gmail.com"
+    },
+    {
+      "username": "nfleury1", 
+      "email": "nicole_fleury@zohomail.com"
+    },
+    {
+      "username": "Kittycat3",
+      "email": "amaryllis_noel@yahoo.com"
+    }
+  ]
+}
