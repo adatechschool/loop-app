@@ -592,7 +592,213 @@ La carte utilise React Leaflet pour afficher les lieux de manière interactive a
 </VStack>
 ```
 
-### 3. Gestion des lieux  
+### 3. Gestion des images avec Cloudinary
+
+L'application Loop utilise Cloudinary pour la gestion et le stockage des images. Cette intégration permet aux utilisateurs de télécharger des photos lors de l'ajout de nouveaux lieux.
+
+#### 3.1 Configuration Cloudinary (Backend)
+
+**Configuration de base :**
+```javascript
+// backend/config/cloudinary.js
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+const storage = new CloudinaryStorage({
+  cloudinary,
+  params: {
+    folder: "your-folder-name", // optional
+    allowed_formats: ["jpeg", "png", "jpg"],
+  },
+});
+
+module.exports = { cloudinary, storage };
+```
+
+#### 3.2 Routes d'upload
+
+**Route d'upload d'images :**
+```javascript
+// backend/routes/uploadRoutes.js
+const express = require("express");
+const multer = require("multer");
+const { storage } = require("../config/cloudinary");
+const { uploadImage } = require("../controllers/uploadController");
+
+const upload = multer({ storage });
+const router = express.Router();
+
+router.post("/", upload.single("image"), uploadImage);
+
+module.exports = router;
+```
+
+**Contrôleur d'upload :**
+```javascript
+// backend/controllers/uploadController.js
+const uploadImage = async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: "No file uploaded" });
+    }
+
+    const imageUrl = req.file.path; // Cloudinary gives this in .path
+    return res.status(200).json({ url: imageUrl });
+  } catch (err) {
+    console.error("Upload error:", err);
+    return res.status(500).json({ error: "Image upload failed." });
+  }
+};
+
+module.exports = { uploadImage };
+```
+
+#### 3.3 Gestion des métadonnées d'images
+
+**Route pour sauvegarder les métadonnées :**
+```javascript
+// backend/routes/imageRoutes.js
+const express = require("express");
+const router = express.Router();
+const imageController = require("../controllers/imageController");
+const authenticateToken = require("../middleware/authMiddleware");
+
+router.post("/images", authenticateToken, imageController.createImage);
+
+module.exports = router;
+```
+
+**Contrôleur pour les images :**
+```javascript
+// backend/controllers/imageController.js
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const { createImageService } = require("../services/image.service.js");
+
+exports.createImage = async (req, res) => {
+  try {
+    const { url } = req.body;
+
+    if (!url) {
+      return res.status(400).json({ message: "URL manquante" });
+    }
+
+    const image = await createImageService(url);
+
+    return res.status(201).json(image);
+  } catch (error) {
+    console.error("Erreur création image :", error);
+    return res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+```
+
+#### 3.4 Intégration Frontend
+
+**Gestion d'upload côté client :**
+```tsx
+// Extrait de frontend/src/components/FormAddList.tsx
+const handleImageUpload = async (selectedFile: File) => {
+  setIsUploading(true);
+  const formData = new FormData();
+  formData.append("file", selectedFile);
+  formData.append("upload_preset", "unsigned_demo");
+
+  try {
+    // Upload vers Cloudinary
+    const uploadRes = await axios.post(
+      "https://api.cloudinary.com/v1_1/dpqyho229/image/upload",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    const imageUrl = uploadRes.data.secure_url;
+
+    // Sauvegarde des métadonnées en base
+    const imageRes = await axios.post(
+      `${process.env.REACT_APP_LOOP_API_URL}/api/images`,
+      { url: imageUrl },
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    const imageId = imageRes.data.image_id;
+    setPlaceFieldsValues((prev) => ({
+      ...prev,
+      images: [imageId],
+    }));
+
+    toast({
+      title: "Image uploadée",
+      description: "L'image a été uploadée avec succès !",
+      status: "success",
+      duration: 3000,
+      isClosable: true,
+      position: "top",
+    });
+  } catch (error) {
+    console.error("Erreur lors de l'upload image", error);
+    setError("Erreur lors du téléchargement de l'image");
+    setImagePreview(null);
+  } finally {
+    setIsUploading(false);
+  }
+};
+```
+
+**Validation et sélection de fichiers :**
+```tsx
+const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const selectedFile = e.target.files?.[0] || null;
+
+  if (selectedFile) {
+    // Validation du type de fichier
+    if (!selectedFile.type.startsWith("image/")) {
+      toast({
+        title: "Erreur",
+        description: "Veuillez sélectionner une image valide.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+
+    // Validation de la taille (10MB max)
+    if (selectedFile.size > 10 * 1024 * 1024) {
+      toast({
+        title: "Erreur",
+        description: "L'image ne peut pas dépasser 10MB.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+        position: "top",
+      });
+      return;
+    }
+
+    // Prévisualisation de l'image
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      setImagePreview(e.target?.result as string);
+    };
+    reader.readAsDataURL(selectedFile);
+
+    // Upload de l'image
+    handleImageUpload(selectedFile);
+  }
+};
+```
+
+### 4. Gestion des lieux  
 
 **Routes backend pour les lieux :**
 ```javascript
@@ -612,13 +818,13 @@ router.delete("/places/:id", authenticateToken, placeController.deletePlace);
 module.exports = router;
 ```
 
-### 4. Connexion à la base de donnée NeonDB  
+### 5. Connexion à la base de donnée NeonDB  
 
 La connexion à la base de données PostgreSQL hébergée sur NeonDB se fait via Prisma ORM.
 
-### 5. Sécurité  
+### 6. Sécurité  
 
-#### 5.1 Authentification des utilisateurs  
+#### 6.1 Authentification des utilisateurs  
 
 **Contrôleur d'authentification :**
 ```javascript
@@ -668,7 +874,7 @@ exports.updateUser = async (req, res) => {
 };
 ```
 
-#### 5.2 Session JWT et protection des identifiants  
+#### 6.2 Session JWT et protection des identifiants  
 
 **Configuration du serveur avec authentification :**
 ```javascript
@@ -737,7 +943,7 @@ app.listen(PORT, () => {
 });
 ```
 
-#### 5.3 Protections des routes  
+#### 6.3 Protections des routes  
 
 **Middleware d'authentification :**
 ```typescript
@@ -749,9 +955,9 @@ const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
 };
 ```
 
-### 6. Déploiement  
+### 7. Déploiement  
 
-#### 6.1 Processus de déploiement
+#### 7.1 Processus de déploiement
 
 **Configuration Docker pour le backend :**
 ```dockerfile
