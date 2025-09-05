@@ -364,29 +364,419 @@ Avec ce schémas, on peut visualiser les relations entre les différentes tables
 
 ## **7\. Développements**
 
-1. Contexte et structure de l’application  
-2. Création des interfaces utilisateur  
-   1. Formulaire d’ajout de lieu  
-   2. Implémentation de la carte  
-   3. Visualisation des lieux 
+### 1. Contexte et structure de l'application  
 
-3. Gestion des lieux  
-4. Connexion à la base de donnée NeonDB  
-5. Sécurité  
-   1. Authentification des utilisateurs  
-   2. Session JWT et protection des identifiants  
-   3. Protections des routes  
-6. Déploiement  
-   1. Processus de déploiement
+L'application Loop est structurée en deux parties principales : un frontend React TypeScript et un backend Node.js Express.
 
-Pour l’intégration et le déploiement de l’application, j’ai un pipeline CI/CD avec GitHub Actions. Ce pipeline est exécuté automatiquement à chaque pull request et permet de lancer les tests avant le merge, garantissant ainsi que le code intégré reste fonctionnel. De plus, les fonctionnalités de Netlify permettent de créer des liens dynamiques du front et offre un aperçu du front sans avoir à redémarrer le projet. 
+**Structure du backend :**
+```json
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "postinstall": "prisma generate"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.7.0",
+    "express": "^4.21.2",
+    "cors": "^2.8.5",
+    "jsonwebtoken": "^9.0.2",
+    "bcrypt": "^5.1.1",
+    "cloudinary": "^1.41.3",
+    "passport": "^0.7.0"
+  }
+}
+```
 
-Côté frontend, j’ai déployé l’application React sur Netlify. La configuration inclut la commande de build (npm run build) et le répertoire de publication (build). J’ai également paramétré les variables d’environnement nécessaires pour que le frontend puisse communiquer correctement avec l’API du backend.
+**Structure du frontend :**
+```json
+{
+  "name": "loop-app-2",
+  "version": "0.1.0",
+  "dependencies": {
+    "@chakra-ui/react": "^2.10.3",
+    "@types/react": "^18.3.11",
+    "react": "^18.3.1",
+    "react-router-dom": "^6.28.0",
+    "react-leaflet": "^4.2.1",
+    "axios": "^1.8.4"
+  }
+}
+```
 
-Pour le backend, j’ai mis en place un déploiement sur Render, qui héberge mon serveur Node.js/Express. Là aussi, j’ai configuré les variables d’environnement indispensables : la connexion à la base de données PostgreSQL hébergée sur NeonDB, la clé secrète pour les sessions, ainsi que les identifiants liés au service Cloudinary pour la gestion des images.
+**Architecture de l'application :**
+```tsx
+// frontend/src/App.tsx
+import React from "react";
+import { Routes, Route } from "react-router-dom";
+import {
+  HomePage,
+  ListPage,
+  AddPage,
+  SearchPage,
+  ProfilePage,
+  DetailPage,
+  EditDetailPage,
+} from "./pages";
+import LogIn from "./pages/LogInPage/LogIn";
+import LoginForm from "./pages/LogInPage/LogInForm";
+import SignUpForm from "./pages/LogInPage/SignUpForm";
+import MainLayout from "./layouts/MainLayout";
+import AuthLayout from "./layouts/AuthLayout";
+import PrivateRoute from "./routes/PrivateRoute";
+import PublicRoute from "./routes/PublicRoute";
+import { GeolocationProvider } from "./contexts/GeolocationContext";
+import SettingsPage from "./components/User/SettingsPage";
+import { AuthProvider } from "src/contexts/AuthContext";
+import { PlacesProvider } from "./contexts/PlacesContext";
 
-Ainsi, chaque partie de l’application (frontend et backend) est déployée sur une plateforme distincte mais interconnectée grâce à la configuration des environnements. Cela permet d’avoir une application fonctionnelle en production, avec une automatisation du cycle de développement via le pipeline CI/CD.
+const App: React.FC = () => {
+  return (
+    <PlacesProvider>
+      <GeolocationProvider>
+        <AuthProvider>
+          <Routes>
+            <Route element={<MainLayout />}>
+              <Route
+                path="/"
+                element={
+                  <PrivateRoute>
+                    <HomePage />
+                  </PrivateRoute>
+                }
+              />
+              <Route path="/places" element={<ListPage />} />
+              <Route
+                path="/add"
+                element={
+                  <PrivateRoute>
+                    <AddPage />
+                  </PrivateRoute>
+                }
+              />
+            </Route>
+          </Routes>
+        </AuthProvider>
+      </GeolocationProvider>
+    </PlacesProvider>
+  );
+};
 
+export default App;
+```
+
+### 2. Création des interfaces utilisateur  
+
+#### 2.1 Formulaire d'ajout de lieu  
+
+```tsx
+// frontend/src/pages/AddPage/AddPage.tsx
+import React from "react";
+import { Box, Heading, Flex } from "@chakra-ui/react";
+import FormAddList from "src/components/FormAddList";
+
+const AddPage: React.FC = () => {
+  return (
+    <Box pb="70px">
+      <Flex justify="center">
+        <Box maxW="md" w="full" px={4}>
+          <Heading textAlign="center" mb={6}>
+            Ajouter un lieu
+          </Heading>
+          <FormAddList />
+        </Box>
+      </Flex>
+      <Box minH={35} />
+    </Box>
+  );
+};
+
+export default AddPage;
+```
+
+**Formulaire d'ajout avec gestion d'images :**
+```tsx
+// Extrait de frontend/src/components/FormAddList.tsx
+const [placeFieldsValues, setPlaceFieldsValues] = useState({
+  name: "",
+  address: "",
+  description: "",
+  types: [] as string[],
+  accessibility,
+  images: [] as string[],
+});
+
+const handleImageUpload = async (selectedFile: File) => {
+  setIsUploading(true);
+  const formData = new FormData();
+  formData.append("file", selectedFile);
+  formData.append("upload_preset", "unsigned_demo");
+
+  try {
+    const uploadRes = await axios.post(
+      "https://api.cloudinary.com/v1_1/dpqyho229/image/upload",
+      formData,
+      { headers: { "Content-Type": "multipart/form-data" } }
+    );
+
+    const imageUrl = uploadRes.data.secure_url;
+
+    const imageRes = await axios.post(
+      `${process.env.REACT_APP_LOOP_API_URL}/api/images`,
+      { url: imageUrl }
+    );
+  } catch (error) {
+    console.error("Erreur lors de l'upload:", error);
+  }
+};
+```
+
+**Interface de sélection de catégorie :**
+```tsx
+<FormControl id="typePlace">
+  <FormLabel>Catégorie</FormLabel>
+  <Select
+    placeholder="Choisis une catégorie"
+    size="lg"
+    name="typePlace"
+    onChange={(e) => {
+      setPlaceFieldsValues((prev) => ({
+        ...prev,
+        types: [e.target.value],
+      }));
+    }}
+  >
+    <option value="park_id">Parc</option>
+    <option value="street_id">Street art</option>
+    <option value="pedestrian_id">Rue piétonne</option>
+    <option value="monument_id">Monument</option>
+    <option value="architecture_id">Architecture</option>
+  </Select>
+</FormControl>
+```
+
+#### 2.2 Implémentation de la carte  
+
+La carte utilise React Leaflet pour afficher les lieux de manière interactive avec la géolocalisation de l'utilisateur.
+
+#### 2.3 Visualisation des lieux 
+
+```tsx
+// Extrait de frontend/src/pages/DetailPage/DetailPage.tsx
+<Text fontWeight="bold" fontSize="3xl" mt="6" textAlign="left">
+  {place.name}
+</Text>
+<Text marginBottom={"6"}>{place.address}</Text>
+<Flex gap={2} mb="4">
+  {place.types.map((type: any) => {
+    const tag = TAG_TYPE_PLACES_COLORS.find((t) => t.key === type.typeId);
+    return tag ? (
+      <Tag key={type.id} colorScheme={tag.color}>
+        {tag.name}
+      </Tag>
+    ) : null;
+  })}
+</Flex>
+
+<VStack align="flex-start" spacing="4" mt="6">
+  <Text fontSize="lg">{place.description}</Text>
+  
+  <Text fontSize="md" fontWeight="bold">
+    Coordonnées
+  </Text>
+  <Text>
+    Lat: {place.geo?.lat}, Long: {place.geo?.lng}
+  </Text>
+</VStack>
+```
+
+### 3. Gestion des lieux  
+
+**Routes backend pour les lieux :**
+```javascript
+// backend/routes/placeRoutes.js
+const express = require("express");
+const placeController = require("../controllers/placeController");
+const authenticateToken = require("../middleware/authMiddleware");
+
+const router = express.Router();
+
+router.post("/places", authenticateToken, placeController.createPlace);
+router.get("/places", authenticateToken, placeController.getAllPlaces);
+router.get("/places/:id", authenticateToken, placeController.getPlaceById);
+router.patch("/places/:id", authenticateToken, placeController.updatePlace);
+router.delete("/places/:id", authenticateToken, placeController.deletePlace);
+
+module.exports = router;
+```
+
+### 4. Connexion à la base de donnée NeonDB  
+
+La connexion à la base de données PostgreSQL hébergée sur NeonDB se fait via Prisma ORM.
+
+### 5. Sécurité  
+
+#### 5.1 Authentification des utilisateurs  
+
+**Contrôleur d'authentification :**
+```javascript
+// backend/controllers/userController.js
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+
+exports.user = async (req, res) => {
+  if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.user.id } });
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    res.status(200).json({ message: "Utilisateur authentifié", user });
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+exports.updateUser = async (req, res) => {
+  const { username, email, profilePicture } = req.body;
+
+  const updateData = {};
+  if (typeof username === "string" && username.trim() !== "")
+    updateData.username = username.trim();
+  if (typeof email === "string" && email.trim() !== "")
+    updateData.email = email.trim();
+  if (typeof profilePicture === "string" && profilePicture.trim() !== "")
+    updateData.profilePicture = profilePicture.trim();
+
+  if (Object.keys(updateData).length === 0) {
+    return res.status(400).json({ message: "No valid fields to update" });
+  }
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: req.user.id },
+      data: updateData,
+    });
+    res.status(200).json({ message: "Profil mis à jour", user: updatedUser });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ message: "Erreur lors de la mise à jour" });
+  }
+};
+```
+
+#### 5.2 Session JWT et protection des identifiants  
+
+**Configuration du serveur avec authentification :**
+```javascript
+// backend/server.js
+const express = require("express");
+const session = require("express-session");
+const passport = require("passport");
+const app = express();
+const bodyParser = require("body-parser");
+const cors = require("cors");
+require("./config/passport")(passport);
+
+const BASE_PATH = "/api";
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
+const uploadRoute = require("./routes/uploadRoutes");
+const placeRoutes = require("./routes/placeRoutes");
+const imageRoutes = require("./routes/imageRoutes");
+const PORT = process.env.PORT || 5000;
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://loop-dev.netlify.app",
+];
+
+app.use(express.json());
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin) return callback(null, true);
+      if (
+        allowedOrigins.some(
+          (o) => origin.endsWith(".netlify.app") || o === origin
+        )
+      ) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+app.use(bodyParser.json());
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(BASE_PATH, authRoutes);
+app.use(BASE_PATH, userRoutes);
+app.use(BASE_PATH, uploadRoute);
+app.use(BASE_PATH, placeRoutes);
+app.use(BASE_PATH, imageRoutes);
+
+app.listen(PORT, () => {
+  console.log(`Server is listening on port ${PORT}`);
+});
+```
+
+#### 5.3 Protections des routes  
+
+**Middleware d'authentification :**
+```typescript
+// Protection côté frontend avec routes privées
+const PrivateRoute = ({ children }: { children: React.ReactNode }) => {
+  const { user } = useAuth();
+  
+  return user ? <>{children}</> : <Navigate to="/login" />;
+};
+```
+
+### 6. Déploiement  
+
+#### 6.1 Processus de déploiement
+
+**Configuration Docker pour le backend :**
+```dockerfile
+# backend/Dockerfile
+# Étape 1 : Utiliser une image officielle de Node.js
+FROM node:20.18
+# Étape 2 : Définir le répertoire de travail
+WORKDIR /app
+# Étape 3 : Copier les fichiers package.json, package-lock.json et prisma
+COPY package*.json ./
+
+COPY prisma ./prisma
+# Étape 4 : Installer les dépendances de l'application
+RUN npm install
+# Étape 5 : Générer le client Prisma
+RUN npx prisma generate
+# Étape 6 : Copier tous les fichiers de l'application (le reste du code)
+COPY . .
+# Étape 7 : Exposer le port
+EXPOSE 5000
+# Étape 8 : Lancer l'application
+CMD ["npm", "run", "dev"]
+```
+
+Pour l'intégration et le déploiement de l'application, j'ai un pipeline CI/CD avec GitHub Actions. Ce pipeline est exécuté automatiquement à chaque pull request et permet de lancer les tests avant le merge, garantissant ainsi que le code intégré reste fonctionnel. De plus, les fonctionnalités de Netlify permettent de créer des liens dynamiques du front et offre un aperçu du front sans avoir à redémarrer le projet.
 ## **8\. Tests**
 
 1. Unitaires  
