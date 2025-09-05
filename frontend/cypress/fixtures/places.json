@@ -1,0 +1,28 @@
+{
+  "testPlace": {
+    "name": "Parc de Test Cypress",
+    "address": "123 Rue de Test, Paris",
+    "description": "Un parc créé pour les tests automatisés Cypress",
+    "accessibility": true,
+    "types": ["park_id"],
+    "geo": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    },
+    "images": []
+  },
+  "updatedPlace": {
+    "name": "Parc de Test Modifié",
+    "address": "456 Avenue de Test Modifiée, Paris",
+    "description": "Description mise à jour pour les tests Cypress",
+    "accessibility": false,
+    "types": ["monument_id"]
+  },
+  "placeTypes": [
+    { "id": "park_id", "label": "Parc" },
+    { "id": "street_id", "label": "Street art" },
+    { "id": "pedestrian_id", "label": "Rue piétonne" },
+    { "id": "monument_id", "label": "Monument" },
+    { "id": "architecture_id", "label": "Architecture" }
+  ]
+}

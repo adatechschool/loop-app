@@ -15,9 +15,11 @@ npm install --save-dev cypress
 ```
 cypress/
 ├── e2e/
-│   └── login.cy.js          # Tests de connexion utilisateur
+│   ├── login.cy.js          # Tests de connexion utilisateur
+│   └── places.cy.js         # Tests CRUD des lieux
 ├── fixtures/
-│   └── users.json           # Données de test (utilisateurs)
+│   ├── users.json           # Données de test (utilisateurs)
+│   └── places.json          # Données de test (lieux)
 ├── support/
 │   ├── commands.js          # Commandes personnalisées Cypress
 │   └── e2e.js              # Configuration globale des tests
@@ -47,11 +49,39 @@ Le fichier `login.cy.js` contient les tests suivants :
 5. **Navigation vers l'inscription** - Teste la navigation entre pages
 6. **Bouton retour** - Teste la fonctionnalité de retour en arrière
 
+## Tests CRUD des lieux disponibles
+
+Le fichier `places.cy.js` contient les tests suivants :
+
+1. **Création de lieu (Create)**
+   - Création d'un nouveau lieu avec tous les champs
+   - Validation des champs requis lors de la création
+
+2. **Lecture de lieux (Read)**
+   - Affichage de la liste des lieux
+   - Visualisation des détails d'un lieu
+
+3. **Modification de lieu (Update)**
+   - Modification d'un lieu existant
+
+4. **Suppression de lieu (Delete)**
+   - Suppression d'un lieu avec confirmation
+   - Test de la demande de confirmation avant suppression
+
+5. **Navigation et interface utilisateur**
+   - Navigation entre les pages de lieux
+   - Validation des éléments d'interface
+
 ## Données de test
 
 Les données de test sont stockées dans `cypress/fixtures/users.json` et incluent :
 - Utilisateurs valides (basés sur les données de mock de l'application)
 - Utilisateurs invalides pour tester les cas d'erreur
+
+Les données de test pour les lieux sont stockées dans `cypress/fixtures/places.json` et incluent :
+- Données de lieu de test pour la création
+- Données de lieu modifié pour les tests de mise à jour
+- Types de lieux disponibles
 
 ## Prérequis pour les tests
 
@@ -60,7 +90,11 @@ Les données de test sont stockées dans `cypress/fixtures/users.json` et inclue
 
 ## Commandes personnalisées
 
-Une commande `cy.login(username, password)` est disponible pour simplifier les tests de connexion.
+Les commandes suivantes sont disponibles pour simplifier les tests :
+- `cy.login(username, password)` - Connexion utilisateur
+- `cy.loginAndWait(username, password)` - Connexion avec vérification du token
+- `cy.createPlace(placeData)` - Création d'un lieu
+- `cy.goToFirstPlaceDetail()` - Navigation vers le premier lieu de la liste
 
 ## Notes importantes
 
