@@ -1,4 +1,25 @@
-const mockAxios = {
+interface MockAxios {
+  create: jest.Mock;
+  get: jest.Mock;
+  post: jest.Mock;
+  put: jest.Mock;
+  delete: jest.Mock;
+  patch: jest.Mock;
+  interceptors: {
+    request: {
+      use: jest.Mock;
+      eject: jest.Mock;
+    };
+    response: {
+      use: jest.Mock;
+      eject: jest.Mock;
+    };
+  };
+}
+
+const mockAxios: MockAxios = {} as MockAxios;
+
+Object.assign(mockAxios, {
   create: jest.fn(() => mockAxios),
   get: jest.fn(() => Promise.resolve({ data: {} })),
   post: jest.fn(() => Promise.resolve({ data: {} })),
@@ -15,6 +36,6 @@ const mockAxios = {
       eject: jest.fn()
     }
   }
-};
+});
 
 export default mockAxios;
