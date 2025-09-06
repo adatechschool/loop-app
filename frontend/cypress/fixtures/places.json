@@ -1,0 +1,41 @@
+{
+  "validPlace": {
+    "name": "Test Parc de Cypress",
+    "address": "123 Rue de Test, 75001 Paris",
+    "description": "Un parc de test créé par Cypress pour les tests E2E",
+    "types": ["park_id"],
+    "accessibility": true,
+    "geo": {
+      "lat": 48.8566,
+      "lng": 2.3522
+    }
+  },
+  "updatePlace": {
+    "name": "Test Parc de Cypress Modifié",
+    "address": "456 Avenue de Test, 75002 Paris",
+    "description": "Description modifiée par les tests Cypress",
+    "types": ["street_id"],
+    "accessibility": false,
+    "geo": {
+      "lat": 48.8606,
+      "lng": 2.3376
+    }
+  },
+  "minimalPlace": {
+    "name": "Lieu Minimal",
+    "address": "1 Rue Simple, 75003 Paris",
+    "types": ["monument_id"],
+    "accessibility": false,
+    "geo": {
+      "lat": 48.8534,
+      "lng": 2.3488
+    }
+  },
+  "invalidPlace": {
+    "name": "",
+    "address": "",
+    "description": "Place avec des champs requis manquants",
+    "types": [],
+    "accessibility": true
+  }
+}

@@ -7,5 +7,8 @@ module.exports = defineConfig({
     specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
     setupNodeEvents(on, config) {
     },
+    env: {
+      REACT_APP_LOOP_API_URL: 'http://localhost:5000'
+    }
   },
 })
