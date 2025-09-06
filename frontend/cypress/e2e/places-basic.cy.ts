@@ -1,3 +1,6 @@
+/// <reference types="cypress" />
+/// <reference path="../support/commands.d.ts" />
+
 describe("Places Basic CRUD Tests", () => {
   beforeEach(() => {
     cy.clearLocalStorage();
