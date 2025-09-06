@@ -31,3 +31,20 @@ Cypress.Commands.add('login', (username, password) => {
   cy.get('input[placeholder="Mot de passe"]').type(password)
   cy.get('button[type="submit"]').click()
 })
+
+// Custom command for signup
+Cypress.Commands.add('signup', (name, username, email, password) => {
+  cy.visit('/signup')
+  cy.get('input[placeholder="Nom complet"]').type(name)
+  cy.get('input[placeholder="Nom d\'utilisateur"]').type(username)
+  cy.get('input[placeholder="Email"]').type(email)
+  cy.get('input[placeholder="Mot de passe"]').type(password)
+  cy.get('button[type="submit"]').contains("S'inscrire").click()
+})
+
+// Custom command to navigate to settings
+Cypress.Commands.add('goToSettings', () => {
+  cy.visit('/profile')
+  cy.get('[aria-label="Options"]').click()
+  cy.contains('Paramètres').click()
+})

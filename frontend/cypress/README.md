@@ -15,14 +15,15 @@ npm install --save-dev cypress
 ```
 cypress/
 ├── e2e/
-│   ├── login.cy.ts          # Tests de connexion utilisateur
-│   └── user-account-management.cy.js  # Tests de gestion de compte utilisateur (création, modification, suppression)
+│   ├── login.cy.ts                      # Tests de connexion utilisateur
+│   ├── user-account-management.cy.js    # Tests complets de gestion de compte (détaillés)
+│   └── user-workflow-complete.cy.js     # Test du workflow principal (création → modification → suppression)
 ├── fixtures/
-│   └── users.json           # Données de test (utilisateurs)
+│   └── users.json                       # Données de test (utilisateurs valides, invalides, et de test)
 ├── support/
-│   ├── commands.js          # Commandes personnalisées Cypress
-│   └── e2e.js              # Configuration globale des tests
-└── cypress.config.js        # Configuration principale Cypress
+│   ├── commands.js                      # Commandes personnalisées Cypress (login, signup, goToSettings)
+│   └── e2e.js                          # Configuration globale des tests
+└── cypress.config.js                    # Configuration principale Cypress
 ```
 
 ## Exécution des tests
@@ -35,6 +36,18 @@ npm run cypress:open
 ### En mode headless (ligne de commande)
 ```bash
 npm run cypress:run
+```
+
+### Pour exécuter un test spécifique
+```bash
+# Test du workflow principal uniquement
+npx cypress run --spec "cypress/e2e/user-workflow-complete.cy.js"
+
+# Tests de gestion de compte complets
+npx cypress run --spec "cypress/e2e/user-account-management.cy.js"
+
+# Tests de connexion
+npx cypress run --spec "cypress/e2e/login.cy.ts"
 ```
 
 ## Tests de connexion disponibles
@@ -57,6 +70,22 @@ Le fichier `user-account-management.cy.js` contient les tests suivants :
 3. **Gestion des emails existants** - Teste la gestion d'erreur lors de l'inscription avec un email existant
 4. **Navigation depuis l'inscription** - Teste la navigation de retour depuis la page d'inscription
 5. **Modification de profil sans suppression** - Teste la modification isolée du profil utilisateur
+
+## Test de workflow principal
+
+Le fichier `user-workflow-complete.cy.js` contient le test demandé spécifiquement :
+
+1. **Workflow complet utilisateur** - Test e2e complet qui suit le parcours : 
+   - ✅ Création d'un compte utilisateur (signup)
+   - ✅ Modification du profil (paramètres)
+   - ✅ Suppression du compte
+2. **Gestion d'erreurs** - Test de gestion d'erreur avec email existant
+
+## Commandes personnalisées disponibles
+
+- `cy.login(username, password)` - Connexion utilisateur
+- `cy.signup(name, username, email, password)` - Inscription d'un nouvel utilisateur
+- `cy.goToSettings()` - Navigation vers la page des paramètres depuis le profil
 
 ## Données de test
 

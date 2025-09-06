@@ -14,5 +14,11 @@
     "username": "testuser_cypress",
     "email": "testuser.cypress@example.com",
     "password": "cypress123test"
+  },
+  "testUserWorkflow": {
+    "name": "Utilisateur Test Workflow",
+    "username": "workflow_user_test",
+    "email": "workflow.test@cypress.com",
+    "password": "workflow123!"
   }
 }
