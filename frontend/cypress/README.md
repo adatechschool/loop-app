@@ -15,7 +15,8 @@ npm install --save-dev cypress
 ```
 cypress/
 ├── e2e/
-│   └── login.cy.js          # Tests de connexion utilisateur
+│   ├── login.cy.ts          # Tests de connexion utilisateur
+│   └── user-account-management.cy.js  # Tests de gestion de compte utilisateur (création, modification, suppression)
 ├── fixtures/
 │   └── users.json           # Données de test (utilisateurs)
 ├── support/
@@ -38,7 +39,7 @@ npm run cypress:run
 
 ## Tests de connexion disponibles
 
-Le fichier `login.cy.js` contient les tests suivants :
+Le fichier `login.cy.ts` contient les tests suivants :
 
 1. **Connexion avec identifiants valides** - Teste la connexion réussie et la redirection
 2. **Connexion avec identifiants invalides** - Teste l'affichage des messages d'erreur
@@ -46,6 +47,16 @@ Le fichier `login.cy.js` contient les tests suivants :
 4. **Validation des champs requis** - Teste la validation côté client
 5. **Navigation vers l'inscription** - Teste la navigation entre pages
 6. **Bouton retour** - Teste la fonctionnalité de retour en arrière
+
+## Tests de gestion de compte disponibles
+
+Le fichier `user-account-management.cy.js` contient les tests suivants :
+
+1. **Workflow complet de gestion de compte** - Teste la création, modification et suppression d'un compte utilisateur
+2. **Validation des champs d'inscription** - Teste la validation côté client du formulaire d'inscription
+3. **Gestion des emails existants** - Teste la gestion d'erreur lors de l'inscription avec un email existant
+4. **Navigation depuis l'inscription** - Teste la navigation de retour depuis la page d'inscription
+5. **Modification de profil sans suppression** - Teste la modification isolée du profil utilisateur
 
 ## Données de test
 

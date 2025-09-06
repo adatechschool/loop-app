@@ -8,5 +8,11 @@
     "username": "utilisateur_inexistant",
     "email": "inexistant@gmail.com",
     "password": "mot_de_passe_incorrect"
+  },
+  "newUser": {
+    "name": "Test User Cypress",
+    "username": "testuser_cypress",
+    "email": "testuser.cypress@example.com",
+    "password": "cypress123test"
   }
 }
