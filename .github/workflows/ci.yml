@@ -1,0 +1,27 @@
+name: CI monorepo
+
+on:
+  pull_request:
+    branches:
+      - development
+
+jobs:
+  frontend-tests:
+    if: contains(github.event.pull_request.head.ref, 'frontend')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: cd apps/frontend && npm install && npm test
+
+  backend-tests:
+    if: contains(github.event.pull_request.head.ref, 'backend')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: cd apps/backend && npm install && npm test
