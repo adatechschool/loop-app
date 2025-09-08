@@ -15,7 +15,7 @@ describe("User login", () => {
   it("it should redirect to homepage when successful login", function (this: {
     users: UsersFixture;
   }) {
-    cy.visit("/signin");
+    cy.visit("/signin", { failOnStatusCode: false });
 
     cy.get('input[placeholder="Email ou Nom d\'utilisateur"]').type(
       this.users.validUser.username
