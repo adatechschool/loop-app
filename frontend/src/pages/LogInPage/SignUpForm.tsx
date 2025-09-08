@@ -59,6 +59,7 @@ const SignupForm: React.FC = () => {
         }
       );
 
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password: _ } = response.data;
 
       toast({
